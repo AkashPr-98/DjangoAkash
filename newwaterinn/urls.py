@@ -20,7 +20,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('a',views.Treat_cnd),
     path('aa/',views.testo),
-    path('topicapi',include('devices.urls')),
+    path('topicapi/',include('devices.urls')),
     # path('',include('devices.routing')),
     # path('c',views.on_message)
 

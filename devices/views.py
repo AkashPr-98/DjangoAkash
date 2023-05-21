@@ -1589,7 +1589,9 @@ class rwpsettingViewset(viewsets.ModelViewSet):
     serializer_class = rwpsettingSerializer
     def dispatch(self, request, *args, **kwargs):
         try:
+            print("sssss")
             data_dict = json.loads(request.body)
+            # data_dict = request.body
             unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
             print("dict data is:",data_dict)
             value_list=list(data_dict.values())
@@ -1605,8 +1607,9 @@ class rwpsettingViewset(viewsets.ModelViewSet):
                     del data_dict[key]
             mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
             print("data send to hivemq")
-        except Exception as e:
-            print("Error",e)
+        # except Exception as e:
+        except json.JSONDecodeError as e:
+            print("Errorss",e)
         return super().dispatch(request)    
     def perform_create(self, serializer):
         try:
