@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'channels',
     'rest_framework',
-    # 'corsheaders',
+    'corsheaders',
     'devices',
 ]
 # INSTALLED_APPS = [
@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'newwaterinn.urls'
