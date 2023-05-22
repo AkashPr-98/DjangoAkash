@@ -1655,6 +1655,7 @@ class rwpsettingViewset(viewsets.ModelViewSet):
             value_list=list(data_dict.values())
             print("value_list:",value_list)
             dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+            did = 0
             for x in dinfo:
                 print("did id:",x.Device_id)
                 did=x.Device_id
@@ -1802,6 +1803,7 @@ class cndsettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                did = 0
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1810,7 +1812,7 @@ class cndsettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
