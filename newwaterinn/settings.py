@@ -93,6 +93,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'newwaterinn.wsgi.application'
 ASGI_APPLICATION = 'newwaterinn.asgi.application'
 
+
+# REST_FRAMEWORK = {
+#     'DEFAULT_AUTHENTICATION_CLASSES': [
+#         'rest_framework.authentication.SessionAuthentication',
+#     ],
+#     # ...
+# }
+
+
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 CORS_ORIGIN_ALLOW_ALL = True

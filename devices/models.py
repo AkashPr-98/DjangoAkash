@@ -1900,7 +1900,7 @@ class device_info(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    site_name=models.CharField(max_length=100)
 
     def str(self):
         return self.Device_id
