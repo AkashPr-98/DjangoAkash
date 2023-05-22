@@ -1590,7 +1590,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1599,7 +1599,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -1654,7 +1654,7 @@ class rwpsettingViewset(viewsets.ModelViewSet):
             print("dict data is:",data_dict)
             value_list=list(data_dict.values())
             print("value_list:",value_list)
-            dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+            dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
             did = 0
             for x in dinfo:
                 print("did id:",x.Device_id)
@@ -1704,7 +1704,7 @@ class hppstateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1713,7 +1713,7 @@ class hppstateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -1753,7 +1753,7 @@ class hppsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1762,7 +1762,7 @@ class hppsettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -1802,7 +1802,7 @@ class cndsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 did = 0
                 for x in dinfo:
                     print("did id:",x.Device_id)
@@ -1855,7 +1855,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1864,7 +1864,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -1906,7 +1906,7 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1915,7 +1915,7 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -1957,7 +1957,7 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1966,7 +1966,7 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2007,7 +2007,7 @@ class panelsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2016,7 +2016,7 @@ class panelsettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2057,7 +2057,7 @@ class atmsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2066,7 +2066,7 @@ class atmsettingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2114,7 +2114,7 @@ class ampv1stateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2123,7 +2123,7 @@ class ampv1stateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2165,7 +2165,7 @@ class ampv1settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2174,7 +2174,7 @@ class ampv1settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2215,7 +2215,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2224,7 +2224,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2265,7 +2265,7 @@ class ampv2settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2274,7 +2274,7 @@ class ampv2settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2316,7 +2316,7 @@ class tap1settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2325,7 +2325,7 @@ class tap1settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2366,7 +2366,7 @@ class tap2settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2375,7 +2375,7 @@ class tap2settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2416,7 +2416,7 @@ class tap3settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2425,7 +2425,7 @@ class tap3settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
@@ -2466,7 +2466,7 @@ class tap4settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2475,7 +2475,7 @@ class tap4settingViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
                 print("data send to hivemq")
 
             except Exception as e:
