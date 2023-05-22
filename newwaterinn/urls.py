@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path,include
 from devices import views
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('a',views.Treat_cnd),
@@ -23,5 +24,4 @@ urlpatterns = [
     path('topicapi/',include('devices.urls')),
     # path('',include('devices.routing')),
     # path('c',views.on_message)
-
 ]
