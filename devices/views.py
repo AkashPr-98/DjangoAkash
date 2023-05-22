@@ -1,4 +1,5 @@
 from django.shortcuts import render
+# from rest_framework_jwt.authentication import JSONWebTokenAuthentication
 
 # Create your views here.
 from django.shortcuts import render
@@ -7,7 +8,7 @@ from django.utils import timezone
 # from dateutil.relativedelta import relativedelta
 import datetime
 import pytz
-import json
+from json import JSONDecodeError
 import ast
 from rest_framework import viewsets,permissions
 # from tzlocal import get_localzone # $ pip install tzlocal
@@ -55,7 +56,7 @@ from django.contrib.auth.models import User
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
-
+from django.core.serializers import serialize
 
 # Use settings and models as needed
 
@@ -273,12 +274,30 @@ qs={}
 
 
 
+# ...
+
+# def dispatch(self, request, *args, **kwargs):
+#     try:
+#         # Existing code...
+#     except Exception as e:
+#         response_data = {
+#             'data': str(e),  # Convert exception to string representation
+#             'status': 200,
+#             'message': "Exception found"
+#         }
+#         traceback.print_exc()  # Optionally print the traceback for debugging purposes
+    
+#     return JsonResponse(response_data, safe=False, content_type="application/json")
+
+
 
 class updated_treat_rwpViewset(viewsets.ModelViewSet):
-    
+    # authentication_classes = [JSONWebTokenAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]
     def dispatch(self, request, *args, **kwargs):
         try:
             did = 0
+
             data_dict = json.loads(request.body)
             value_list = list(data_dict.values())
             dinfo = device_info.objects.filter(componant_name=value_list[2], unit_type=value_list[0], company_name=value_list[1])
@@ -313,6 +332,14 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
                     'message': "Data get successfully"  # Add the message field
                 }
             response_data=[response_data]
+        
+        # except JSONDecodeError as e:
+        #     response_data = {
+        #         'data': str(e),  # Include the 'data' field
+        #         'status': 200,  # Add the status field
+        #         'message': "JSONDecodeError: Invalid JSON"  # Add the message field
+        #     }
+
         except Exception as e:
                     response_data = {
                         'data':e,  # Include the 'data' field
@@ -2066,13 +2093,56 @@ class atmsettingViewset(viewsets.ModelViewSet):
                 pass
         
 class consensettingViewset(viewsets.ModelViewSet):
-	# define queryset
-	queryset = consen_setting.objects.all()
+    # define queryset
+        queryset = consen_setting.objects.all()
 
-	# specify serializer to be used
-	serializer_class = consensettingSerializer
+        # specify serializer to be used
+        serializer_class = consensettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
+        def dispatch(self, request, *args, **kwargs):
+        
+            try:
+                data_dict = json.loads(request.body)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
+                print("dict data is:",data_dict)
+                value_list=list(data_dict.values())
+                print("value_list:",value_list)
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                for x in dinfo:
+                    print("did id:",x.Device_id)
+                    did=x.Device_id
+                    cmpname=x.componant_name
+                    print("ddddid is",did)
+                for key in unwanted_keys:
+                    if key in data_dict:
+                        del data_dict[key]
+                mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
+                print("data send to hivemq")
 
-    # permission_classes = [permissions.IsAuthenticated]
+            except Exception as e:
+                print("Error",e)
+            return super().dispatch(request)    
+        def perform_create(self, serializer):
+            try:
+                data_dict = serializer.validated_data
+                # Get the device information based on the provided values
+                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
+                                                unit_type=data_dict['unit_type'],
+                                                company_name=data_dict['company_name']).last()
+                if dinfo:
+                    did = dinfo.Device_id
+                    cmpname = dinfo.componant_name
+                    data_dict['device_id'] = did
+                serializer.save()  # Save the data to the database
+                
+            except Exception as e:
+                print("Error:", e)
+        def desptroy(self, request):
+            try:
+                instance = self.get_object()
+                self.perform_destroy(instance)
+            except Http404:
+                pass
 class ampv1stateViewset(viewsets.ModelViewSet):
         # define queryset
         queryset = ampv1_state.objects.all()
