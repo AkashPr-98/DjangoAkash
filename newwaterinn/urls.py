@@ -19,7 +19,7 @@ from devices import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('a',views.Treat_cnd),
-    path('',views.testo),
+    path('aa/',views.testo),
     path('topicapi/',include('devices.urls')),
     # path('',include('devices.routing')),
     # path('c',views.on_message)
