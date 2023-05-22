@@ -1590,7 +1590,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1654,7 +1654,7 @@ class rwpsettingViewset(viewsets.ModelViewSet):
             print("dict data is:",data_dict)
             value_list=list(data_dict.values())
             print("value_list:",value_list)
-            dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+            dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
             did = 0
             for x in dinfo:
                 print("did id:",x.Device_id)
@@ -1704,7 +1704,7 @@ class hppstateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1753,7 +1753,7 @@ class hppsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1802,8 +1802,9 @@ class cndsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 did = 0
+                cmpname = ''
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1855,7 +1856,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1906,7 +1907,7 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -1957,7 +1958,7 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2007,7 +2008,7 @@ class panelsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2057,7 +2058,7 @@ class atmsettingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2114,7 +2115,7 @@ class ampv1stateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2165,7 +2166,7 @@ class ampv1settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2215,7 +2216,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2265,7 +2266,7 @@ class ampv2settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2316,7 +2317,7 @@ class tap1settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2366,7 +2367,7 @@ class tap2settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2416,7 +2417,7 @@ class tap3settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
@@ -2466,7 +2467,7 @@ class tap4settingViewset(viewsets.ModelViewSet):
                 print("dict data is:",data_dict)
                 value_list=list(data_dict.values())
                 print("value_list:",value_list)
-                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[0],company_name=value_list[1])
+                dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     print("did id:",x.Device_id)
                     did=x.Device_id
