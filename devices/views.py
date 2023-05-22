@@ -1809,6 +1809,7 @@ class cndsettingViewset(viewsets.ModelViewSet):
                     print("did id:",x.Device_id)
                     did=x.Device_id
                     cmpname=x.componant_name
+                    print("cname is:",cmpname)
                     print("ddddid is",did)
                 for key in unwanted_keys:
                     if key in data_dict:
@@ -1822,10 +1823,13 @@ class cndsettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 data_dict = serializer.validated_data
+                print(data_dict)
                 # Get the device information based on the provided values
                 dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
                                                 unit_type=data_dict['unit_type'],
                                                 company_name=data_dict['company_name']).last()
+
+                print(dinfo)
                 if dinfo:
                     did = dinfo.Device_id
                     cmpname = dinfo.componant_name

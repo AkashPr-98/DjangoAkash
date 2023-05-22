@@ -1296,21 +1296,6 @@ class cnd_tds_repo_daily(models.Model):
 
     def __str__(self) -> str:
         return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
-#   class Meta:
-        app_label = 'devices'
-# class repo_daily(models.Model):
-#     device_id=models.CharField(max_length=100)
-#     service=models.CharField(max_length=100,null=True,blank=True)
-#     sum=models.BigIntegerField(null=True,blank=True)
-#     count=models.BigIntegerField(null=True,blank=True)
-#     avg=models.FloatField(null=True,blank=True)
-#     month =  models.CharField(max_length=50)
-#     year =  models.CharField(max_length=50)
-#     day =  models.CharField(max_length=50)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True) 
-#     def __str__(self) -> str:
-#         return self.device_id,self.service,self.sum,self.count,self.avg,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 class cnd_tds_repo_monthly(models.Model):
@@ -1331,20 +1316,7 @@ class cnd_tds_repo_monthly(models.Model):
 
     def __str__(self) -> str:
         return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
-#   class Meta:
-        app_label = 'devices'
-# class repo_monthly(models.Model):
-#     device_id=models.CharField(max_length=100)
-#     service=models.CharField(max_length=100,null=True,blank=True)
-#     sum=models.BigIntegerField(null=True,blank=True)
-#     count=models.BigIntegerField(null=True,blank=True)
-#     avg=models.FloatField(null=True,blank=True)
-#     month =  models.CharField(max_length=50)
-#     year =  models.CharField(max_length=50)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True) 
-#     def __str__(self) -> str:
-#         return self.device_id,self.service,self.sum,self.count,self.avg,self.created_at,self.updated_at
+    
     class Meta:
         app_label = 'devices'
 class cnd_tds_repo_yearly(models.Model):
@@ -1943,16 +1915,7 @@ class rwp_setting(models.Model):
         return self.olc,self.drc,self.spn,self.unit_type,self.company_name,self.componant_name   
     class Meta:
         app_label = 'devices'
-class Rwp_state(models.Model):
-    sts=models.CharField(max_length=100) 
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-    def str(self):
-        return self.sts
-    
-    class Meta:
-        app_label = 'devices'
+
 class hpp_setting(models.Model):
     olc=models.CharField(max_length=100)
     drc=models.CharField(max_length=100)
@@ -1960,22 +1923,13 @@ class hpp_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)    
-    
+    device_id=models.CharField(max_length=100)
 
     def str(self):
         return self.olc
     class Meta:
         app_label = 'devices'
-class hpp_state(models.Model):
-    sts=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
 
-    def str(self):
-        return self.sts
-    class Meta:
-        app_label = 'devices'
 class cnd_setting(models.Model):
     spn=models.CharField(max_length=100)
     tsp=models.CharField(max_length=100)
@@ -1983,7 +1937,7 @@ class cnd_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)  
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.spn 
     class Meta:
@@ -1995,36 +1949,14 @@ class tds_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)  
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.spn 
     
 
     class Meta:
         app_label = 'devices'
-class F_flowsen_setting(models.Model):
-    ff=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.ff
-    
-    class Meta:
-        app_label = 'devices'
-class P_flowsen_setting(models.Model):
-    ff=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.ff
-
-
-    class Meta:
-        app_label = 'devices'
+# 
 class panel_setting(models.Model):
     mod=models.CharField(max_length=100)
     unv=models.CharField(max_length=100)
@@ -2038,7 +1970,7 @@ class panel_setting(models.Model):
     componant_name=models.CharField(max_length=100)    
     unit_type=models.CharField(max_length=100)    
     company_name=models.CharField(max_length=100)    
-    
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.mod 
 
@@ -2058,7 +1990,7 @@ class atm_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)    
-    
+    device_id=models.CharField(max_length=100)
 
     def str(self):
         return self.ntp 
@@ -2071,7 +2003,7 @@ class consen_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.spn
 
@@ -2085,7 +2017,7 @@ class tap1_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.p1
     class Meta:
@@ -2098,7 +2030,7 @@ class tap2_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.p1
     class Meta:
@@ -2111,7 +2043,7 @@ class tap3_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.p1
     class Meta:
@@ -2124,154 +2056,43 @@ class tap4_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.p1
     class Meta:
         app_label = 'devices'
-class ampv1_setting(models.Model):
-    srt=models.CharField(max_length=100)
-    bkt=models.CharField(max_length=100)
-    rst=models.CharField(max_length=100)
-    mot=models.CharField(max_length=100)
-    stp=models.CharField(max_length=100)
-    op1=models.CharField(max_length=100)
-    op2=models.CharField(max_length=100)
-    op3=models.CharField(max_length=100)
-    ip1=models.CharField(max_length=100)
-    ip2=models.CharField(max_length=100)
-    ip3=models.CharField(max_length=100)
-    psi=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
 
-    def str(self):
-        return self.srt
-    class Meta:
-        app_label = 'devices'
-class ampv2_setting(models.Model):
-    srt=models.CharField(max_length=100)
-    bkt=models.CharField(max_length=100)
-    rst=models.CharField(max_length=100)
-    mot=models.CharField(max_length=100)
-    stp=models.CharField(max_length=100)
-    op1=models.CharField(max_length=100)
-    op2=models.CharField(max_length=100)
-    op3=models.CharField(max_length=100)
-    ip1=models.CharField(max_length=100)
-    ip2=models.CharField(max_length=100)
-    ip3=models.CharField(max_length=100)
-    psi=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
 
-    def str(self):
-        return self.srt
-
-    class Meta:
-        app_label = 'devices'
-class ampv1_state(models.Model):
-    pos=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-    
-    def str(self):
-        return self.pos
-    class Meta:
-        app_label = 'devices'
-class ampv2_state(models.Model):
-    pos=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-    def str(self):
-        return self.pos
-
-    
-    class Meta:
-        app_label = 'devices'
-class rwp_setting(models.Model):
-    olc=models.CharField(max_length=100)
-    drc=models.CharField(max_length=100)
-    spn=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100) 
-    device_id=models.CharField(max_length=100)   
-    
-
-    def str(self):
-        return self.olc,self.drc,self.spn,self.unit_type,self.company_name,self.componant_name   
-    class Meta:
-        app_label = 'devices'
 class Rwp_state(models.Model):
     sts=models.CharField(max_length=100) 
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.sts
     
     class Meta:
         app_label = 'devices'
-class hpp_setting(models.Model):
-    olc=models.CharField(max_length=100)
-    drc=models.CharField(max_length=100)
-    spn=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)    
-    
 
-    def str(self):
-        return self.olc
-    class Meta:
-        app_label = 'devices'
 class hpp_state(models.Model):
     sts=models.CharField(max_length=100)
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.sts
     class Meta:
         app_label = 'devices'
-class cnd_setting(models.Model):
-    spn=models.CharField(max_length=100)
-    tsp=models.CharField(max_length=100)
-    asp=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)  
 
-    def str(self):
-        return self.spn 
-    class Meta:
-        app_label = 'devices'
-class tds_setting(models.Model):
-    spn=models.CharField(max_length=100)
-    tsp=models.CharField(max_length=100)
-    asp=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)  
 
-    def str(self):
-        return self.spn 
-    
-
-    class Meta:
-        app_label = 'devices'
 class F_flowsen_setting(models.Model):
     ff=models.CharField(max_length=100)
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.ff
     
@@ -2282,7 +2103,7 @@ class P_flowsen_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.ff
 
@@ -2308,91 +2129,9 @@ class panel_setting(models.Model):
 
     class Meta:
         app_label = 'devices'
-class atm_setting(models.Model):
-    ntp=models.CharField(max_length=100)
-    nov=models.CharField(max_length=100)
-    vl1=models.CharField(max_length=100)
-    vl2=models.CharField(max_length=100)    
-    vl3=models.CharField(max_length=100)    
-    vl4=models.CharField(max_length=100)    
-    re1=models.CharField(max_length=100)    
-    re2=models.CharField(max_length=100)    
-    re3=models.CharField(max_length=100)    
-    re4=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)    
-    
 
-    def str(self):
-        return self.ntp 
-    
-    class Meta:
-        app_label = 'devices'
-class consen_setting(models.Model):
-    spn=models.CharField(max_length=100)
-    asp=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
 
-    # def str(self):
-    #     return self.spn
 
-    class Meta:
-        app_label = 'devices'
-class tap1_setting(models.Model):
-    p1=models.CharField(max_length=100)
-    p2=models.CharField(max_length=100)
-    p3=models.CharField(max_length=100)
-    p4=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.p1
-    class Meta:
-        app_label = 'devices'
-class tap2_setting(models.Model):
-    p1=models.CharField(max_length=100)
-    p2=models.CharField(max_length=100)
-    p3=models.CharField(max_length=100)
-    p4=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.p1
-    class Meta:
-        app_label = 'devices'
-class tap3_setting(models.Model):
-    p1=models.CharField(max_length=100)
-    p2=models.CharField(max_length=100)
-    p3=models.CharField(max_length=100)
-    p4=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.p1
-    class Meta:
-        app_label = 'devices'
-class tap4_setting(models.Model):
-    p1=models.CharField(max_length=100)
-    p2=models.CharField(max_length=100)
-    p3=models.CharField(max_length=100)
-    p4=models.CharField(max_length=100)
-    unit_type=models.CharField(max_length=100)
-    company_name=models.CharField(max_length=100)
-    componant_name=models.CharField(max_length=100)
-
-    def str(self):
-        return self.p1
-    class Meta:
-        app_label = 'devices'
 class ampv1_setting(models.Model):
     srt1=models.CharField(max_length=100)
     srt2=models.CharField(max_length=100)
@@ -2410,7 +2149,7 @@ class ampv1_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.srt
     class Meta:
@@ -2432,7 +2171,7 @@ class ampv2_setting(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.srt
 
@@ -2443,7 +2182,7 @@ class ampv1_state(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
-    
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.pos
     class Meta:
@@ -2453,72 +2192,8 @@ class ampv2_state(models.Model):
     unit_type=models.CharField(max_length=100)
     company_name=models.CharField(max_length=100)
     componant_name=models.CharField(max_length=100)
+    device_id=models.CharField(max_length=100)
     def str(self):
         return self.pos
     class Meta:
         app_label = 'devices'
-
-# class flowsen1_setting(models.Model):
-#     ff=models.CharField(max_length=100)
-#     unit_type=models.CharField(max_length=100)
-#     company_name=models.CharField(max_length=100)
-#     componant_name=models.CharField(max_length=100)
-
-#     def str(self):
-#         return self.ff
-# class flowsen2_setting(models.Model):
-#     ff=models.CharField(max_length=100)
-#     unit_type=models.CharField(max_length=100)
-#     company_name=models.CharField(max_length=100)
-#     componant_name=models.CharField(max_length=100)
-
-#     def str(self):
-#         return self.ff
-# class flowsen3_setting(models.Model):
-#     ff=models.CharField(max_length=100)
-#     unit_type=models.CharField(max_length=100)
-#     company_name=models.CharField(max_length=100)
-#     componant_name=models.CharField(max_length=100)
-
-#     def str(self):
-#         return self.ff
-# class flowsen4_setting(models.Model):
-#     ff=models.CharField(max_length=100)
-#     unit_type=models.CharField(max_length=100)
-#     company_name=models.CharField(max_length=100)
-#     componant_name=models.CharField(max_length=100)
-
-#     def str(self):
-#         return self.ff
-    
-# class All_components(models.Model):
-#     #    cnd_tds =models.ArrayField(
-#     #     models.ArrayField(
-#     #         models.CharField(max_length=10, blank=True),
-#     #         size=8,
-#     #     ),
-#     #     size=8,
-#     # )
-   
-#     cnd_tds= models.CharField(max_length=200)
-
-#     def set_cnd_tds(self, x):
-#         self.cnd_tds = json.dumps(x)
-
-#     def get_cnd_tds(self):
-#         return json.loads(self.cnd_tds)
-#     rwp= models.CharField(max_length=200)
-#     hpp= models.CharField(max_length=200)
-#     panel= models.CharField(max_length=200)
-#     ampv1= models.CharField(max_length=200)
-#     ampv2= models.CharField(max_length=200)
-#     ampv3= models.CharField(max_length=200)
-#     ampv4= models.CharField(max_length=200)
-#     ampv5= models.CharField(max_length=200)
-#     flowsen=models.CharField(max_length=200)
-#     tap1= models.CharField(max_length=200)
-#     tap2= models.CharField(max_length=200)
-#     tap3= models.CharField(max_length=200)
-#     tap4= models.CharField(max_length=200)
-#     consen= models.CharField(max_length=200)
-
