@@ -1,5 +1,6 @@
 from django.shortcuts import render
-
+from rest_framework.authentication import TokenAuthentication
+from rest_framework import permissions
 # Create your views here.
 from django.shortcuts import render
 from .models import *
@@ -41,7 +42,7 @@ import traceback
 from django.shortcuts import render
 from channels.generic.websocket import AsyncWebsocketConsumer
 
-
+from django.core.serializers import serialize
 channel_layer = get_channel_layer()
 eg=''
 # set DJANGO_SETTINGS_MODULE=waterinn.settings
@@ -268,27 +269,82 @@ qs={}
 
 
 
+# class updated_treat_rwpViewset(viewsets.ModelViewSet):
+#     def dispatch(self, request, *args, **kwargs):
+#         try:
+#             print("i am from update_treat_rwp")
+#             did = 0
+#             data_dict = json.loads(request.body)
+#             value_list = list(data_dict.values())
+#             dinfo = device_info.objects.filter(componant_name=value_list[2], unit_type=value_list[0], company_name=value_list[1])
+            
+#             for x in dinfo:
+#                 did = x.Device_id
+#                 cmpname = x.componant_name
+            
+#             qs = treat_rwp.objects.filter(device_id=did).order_by('-id')[:1:1]
+#             fields_to_exclude = ['model', 'pk']
+            
+#             data = serialize("json", qs)
+#             data = json.loads(data)
+            
+#             for item in data:
+#                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            
+#             if not data:
+#                 response_data = {
+#                     'data': [],  # Include the 'data' field
+#                     'status': 200,  # Add the status field
+#                     'message': "Data not found"  # Add the message field
+#                 }
+#             else:     
+#                 data = json.dumps(data[0]["fields"])
+#                 data = json.loads(data)
+#                 data = [data]
+#                 response_data = {
+#                     'data': data[0],  # Include the 'data' field
+#                     'status': 200,  # Add the status field
+#                     'message': "Data get successfully"  # Add the message field
+#                 }
+#             response_data=[response_data]
+#         except Exception as e:
+#                     response_data = {
+#                         'data':e,  # Include the 'data' field
+#                         'status': 200,  # Add the status field
+#                         'message': "Exception found"  # Add the message field
+#                     }
+        
+#         return JsonResponse(response_data, safe=False, content_type="application/json")
+
+import json
+
 class updated_treat_rwpViewset(viewsets.ModelViewSet):
     def dispatch(self, request, *args, **kwargs):
         try:
+            print("I am from update_treat_rwp")
             did = 0
             data_dict = json.loads(request.body)
             value_list = list(data_dict.values())
+            print("value_list",value_list)
             dinfo = device_info.objects.filter(componant_name=value_list[2], unit_type=value_list[0], company_name=value_list[1])
-            
+            print("dinfo",dinfo)
             for x in dinfo:
                 did = x.Device_id
                 cmpname = x.componant_name
+                print("did id:",did)
             
             qs = treat_rwp.objects.filter(device_id=did).order_by('-id')[:1:1]
+            print("qs is:",qs)
             fields_to_exclude = ['model', 'pk']
             
             data = serialize("json", qs)
+            print("data is:",data)
             data = json.loads(data)
+            print("data after loads is:",data)
             
             for item in data:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
             
             if not data:
                 response_data = {
@@ -305,16 +361,16 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
                     'status': 200,  # Add the status field
                     'message': "Data get successfully"  # Add the message field
                 }
-            response_data=[response_data]
+                
+            response_data = [response_data]
         except Exception as e:
-                    response_data = {
-                        'data':e,  # Include the 'data' field
-                        'status': 200,  # Add the status field
-                        'message': "Exception found"  # Add the message field
-                    }
+            response_data = {
+                'data': str(e),  # Extract the error message and assign it as a string
+                'status': 200,  # Add the status field
+                'message': "Exception found"  # Add the message field
+            }
         
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-
+        return JsonResponse(json.dumps(response_data), safe=False, content_type="application/json")
 
 
 class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
@@ -1367,7 +1423,7 @@ class consen_YearlyViewset(viewsets.ModelViewSet):
 	queryset = consen_repo_yearly.objects.all()
 
 	# specify serializer to be used
-	serializer_class = tap4_YearlySerializer
+	serializer_class = consen_YearlySerializer
                 
         
 class consen_HourlyViewset(viewsets.ModelViewSet):
@@ -1580,6 +1636,8 @@ class RwpstateViewset(viewsets.ModelViewSet):
 #     print("ddddid is",did)
 
 class rwpsettingViewset(viewsets.ModelViewSet):
+    # authentication_classes = [TokenAuthentication]
+    # permission_classes = [permissions.IsAuthenticated]
 	# define queryset
     print("hi ok ")
     # queryset = rwp_setting.objects.all()
@@ -3171,16 +3229,16 @@ def testo(request):
                 
         except Exception as e:
             print("error ==>", e)
-            error_message = traceback.format_exc()
+            # error_message = traceback.format_exc()
         
         # Send the error message to the WebSocket client
-            send_error_message_to_websocket(error_message)
+            # send_error_message_to_websocket(error_message)
             error_message = e
             global eg
             eg = e
-            # print("eg is:",eg)
-            # print("Error massage:",e)
-            # EchoConsumer.websocket_receive('event','event')
+            print("eg is:",eg)
+            print("Error massage:",e)
+            EchoConsumer.websocket_receive('event','event')
             
             # raise e
             # send_exception_message(error_message)
