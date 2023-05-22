@@ -228,7 +228,7 @@ class ampv1_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 
 class ampv1_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		ampv1 = ampv1_repo_yearly
+		model = ampv1_repo_yearly
 		fields='__all__'
 class ampv2_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -304,7 +304,7 @@ class ampv5_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 
 class ampv5_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		ampv5 = ampv5_repo_yearly
+		model = ampv5_repo_yearly
 		fields='__all__'
 
 class tap1_DailySerializer(serializers.HyperlinkedModelSerializer):
