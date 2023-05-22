@@ -9,7 +9,7 @@ import datetime
 import pytz
 import json
 import ast
-from rest_framework import viewsets
+from rest_framework import viewsets,permissions
 # from tzlocal import get_localzone # $ pip install tzlocal
 from channels.generic.websocket import AsyncWebsocketConsumer
 import asyncio
@@ -50,6 +50,12 @@ eg=''
 # Now you can access Django settings and models
 from django.conf import settings
 from django.contrib.auth.models import User
+
+#jwt setting
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.permissions import IsAuthenticated
+
 
 # Use settings and models as needed
 
@@ -269,6 +275,7 @@ qs={}
 
 
 class updated_treat_rwpViewset(viewsets.ModelViewSet):
+    
     def dispatch(self, request, *args, **kwargs):
         try:
             did = 0
@@ -1265,11 +1272,18 @@ class tap1_HourlyViewset(viewsets.ModelViewSet):
 	serializer_class = tap1_HourlySerializer
         
 class tap1_MonthlyViewset(viewsets.ModelViewSet):
-	# define queryset
-	queryset = tap1_repo_monthly.objects.all()
+    # define queryset
+    queryset = tap1_repo_monthly.objects.all()
 
-	# specify serializer to be used
-	serializer_class = tap1_MonthlySerializer
+    # specify serializer to be used
+    serializer_class = tap1_MonthlySerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+class MyTokenObtainPairView(TokenObtainPairView):
+    pass
+
+class MyTokenRefreshView(TokenRefreshView):
+    pass
         
 class tap1_DailyViewset(viewsets.ModelViewSet):
 	# define queryset
@@ -1526,6 +1540,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = RwpstateSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1587,6 +1602,14 @@ class rwpsettingViewset(viewsets.ModelViewSet):
     print("queryset is",queryset)    
 	# specify serializer to be used
     serializer_class = rwpsettingSerializer
+    # authentication_classes = [JWTAuthentication]
+    permission_classes = [permissions.IsAuthenticated]
+# class MyTokenObtainPairView(TokenObtainPairView):
+#     pass
+
+# class MyTokenRefreshView(TokenRefreshView):
+#     pass
+    
     def dispatch(self, request, *args, **kwargs):
         try:
             print("sssss")
@@ -1637,6 +1660,7 @@ class hppstateViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = hppstateSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1686,6 +1710,7 @@ class hppsettingViewset(viewsets.ModelViewSet):
         queryset = hpp_setting.objects.all()
         # specify serializer to be used
         serializer_class = hppsettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1735,6 +1760,7 @@ class cndsettingViewset(viewsets.ModelViewSet):
 	# define queryset
         queryset = cnd_setting.objects.all()
         serializer_class = cndsettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1786,6 +1812,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = tdssettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         
         def dispatch(self, request, *args, **kwargs):
         
@@ -1838,6 +1865,7 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = FflowsensettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1889,6 +1917,7 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class =PflowsensettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1939,6 +1968,7 @@ class panelsettingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = panelsettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -1989,6 +2019,7 @@ class atmsettingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = atmsettingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2040,12 +2071,15 @@ class consensettingViewset(viewsets.ModelViewSet):
 
 	# specify serializer to be used
 	serializer_class = consensettingSerializer
+
+    # permission_classes = [permissions.IsAuthenticated]
 class ampv1stateViewset(viewsets.ModelViewSet):
         # define queryset
         queryset = ampv1_state.objects.all()
 
         # specify serializer to be used
         serializer_class = ampv1stateSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2097,6 +2131,7 @@ class ampv1settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = ampv1settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2147,6 +2182,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = ampv2stateSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2197,6 +2233,7 @@ class ampv2settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = ampv2settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2248,6 +2285,7 @@ class tap1settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = tap1settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2298,6 +2336,7 @@ class tap2settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = tap2settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2348,6 +2387,7 @@ class tap3settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = tap3settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -2398,6 +2438,8 @@ class tap4settingViewset(viewsets.ModelViewSet):
 
         # specify serializer to be used
         serializer_class = tap4settingSerializer
+        permission_classes = [permissions.IsAuthenticated]
+    
         def dispatch(self, request, *args, **kwargs):
         
             try:

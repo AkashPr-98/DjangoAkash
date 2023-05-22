@@ -17,6 +17,10 @@ Including another URLconf
 from django.urls import path,include
 from .views import *
 from rest_framework import routers
+from devices.views import MyTokenObtainPairView, MyTokenRefreshView
+
+
+
 router = routers.DefaultRouter()
 router.register(r'Topic',TopicViewSet)
 # router.register(r'repo_yearly',YearlyViewset)
@@ -130,4 +134,6 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', include(router.urls)),
     # path('c',views.on_message)
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', MyTokenRefreshView.as_view(), name='token_refresh'),
 ]
