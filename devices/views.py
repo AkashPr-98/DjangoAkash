@@ -60,26 +60,26 @@ from django.core.serializers import serialize
 
 # Use settings and models as needed
 
-import os
-import django
+# import os
+# import django
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'waterinn.settings')
-django.setup()
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'waterinn.settings')
+# django.setup()
 
 
 
-def send_error_message_to_websocket(error_message):
-    # Establish a WebSocket connection
-    # websocket_url = "ws://localhost:8000/ws/echo/"  # Replace with your WebSocket URL
-    websocket_url = "ws://localhost:8000/"  # Replace with your WebSocket URL
-    # Send the error message as a WebSocket message
-    # You can use a WebSocket client library or Django Channels to send the message
-    # Example using Django Channels:
-    from channels.layers import get_channel_layer
-    from asgiref.sync import async_to_sync
+# def send_error_message_to_websocket(error_message):
+#     # Establish a WebSocket connection
+#     # websocket_url = "ws://localhost:8000/ws/echo/"  # Replace with your WebSocket URL
+#     websocket_url = "ws://localhost:8000/"  # Replace with your WebSocket URL
+#     # Send the error message as a WebSocket message
+#     # You can use a WebSocket client library or Django Channels to send the message
+#     # Example using Django Channels:
+#     from channels.layers import get_channel_layer
+#     from asgiref.sync import async_to_sync
 
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.send)("websocket_send", {"type": "websocket.send", "text": error_message})
+#     channel_layer = get_channel_layer()
+#     async_to_sync(channel_layer.send)("websocket_send", {"type": "websocket.send", "text": error_message})
 
 
 
@@ -93,14 +93,14 @@ def send_error_message_to_websocket(error_message):
 
 # class EchoConsumer(SyncConsumer):
 #     def websocket_connect(self, event):
-#         print("connect event is called")
+
 
 #         self.send({
 #             'type': 'websocket.accept'
 #         })
 
 #     def websocket_receive(self, event):
-#         print("event in receive", event)
+
 #         # msg=input("Enter message: ")
 #         # msg=input("Enter masage:")
 #         msg=input("Enter msg:")
@@ -126,7 +126,7 @@ def send_error_message_to_websocket(error_message):
 #             self.websocket_receive(event)
 
 #     def websocket_disconnect(self, event):
-#         print("connection is disconnected")
+
 
 
 #     async def send_exception(self, exception):
@@ -178,7 +178,7 @@ def send_error_message_to_websocket(error_message):
     
 #     while True:
 #         receive_data = await websocket.receive_text()
-#         print("Received data:", receive_data)
+
         
 #         # Process the received data or perform any other actions
         
@@ -186,35 +186,35 @@ def send_error_message_to_websocket(error_message):
 #         response = f"You sent: {receive_data}"
 #         await websocket.send_text(response)
 ###########################
-from channels.consumer import SyncConsumer
-class EchoConsumer(SyncConsumer):
-    def websocket_connect(self, event):
+# from channels.consumer import SyncConsumer
+# class EchoConsumer(SyncConsumer):
+#     def websocket_connect(self, event):
        
-        print("connect event is called")
+        
 
-        self.send({
-            'type': 'websocket.accept'
-        })
-    def websocket_receive(self, event):
+#         self.send({
+#             'type': 'websocket.accept'
+#         })
+#     def websocket_receive(self, event):
        
-        print("event in receive", event)
-        # msg=input("Enter message: ")
-        # print("Error is:",eg)
-                # Send the exception message to the WebSocket client
-        if eg:
-           self.send({
-                'type': 'websocket.send',
-                # 'text': event.get('text')
-                'text':str(eg),
+        
+#         # msg=input("Enter message: ")
+        
+#                 # Send the exception message to the WebSocket client
+#         if eg:
+#            self.send({
+#                 'type': 'websocket.send',
+#                 # 'text': event.get('text')
+#                 'text':str(eg),
                 
-            })
+#             })
        
     
         
         
 
-    def websocket_disconnect(self, event):
-        print("connection is disconnected")
+#     def websocket_disconnect(self, event):
+        
 
 #     async def disconnect(self, close_code):
 #  # Leave room group
@@ -229,11 +229,11 @@ class EchoConsumer(SyncConsumer):
 # # class EchoConsumer(AsyncWebsocketConsumer):
 # class MyConsumer(AsyncWebsocketConsumer):
 #     async def websocket_connect(self, event):
-#         print("Connect event is called")
+
 #         await self.accept()
 
 #     async def websocket_receive(self, event):
-#         print("Event in receive", event)
+
 
 #         # Process received message or perform any necessary actions
 #         # eg = ...
@@ -294,7 +294,7 @@ qs={}
 # class updated_treat_rwpViewset(viewsets.ModelViewSet):
 #     def dispatch(self, request, *args, **kwargs):
 #         try:
-#             print("i am from update_treat_rwp")
+
 #             did = 0
 #             data_dict = json.loads(request.body)
 #             value_list = list(data_dict.values())
@@ -346,27 +346,27 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
     # permission_classes = [permissions.IsAuthenticated]
     def dispatch(self, request, *args, **kwargs):
         try:
-            print("I am from update_treat_rwp")
+            
             did = 0
 
             data_dict = json.loads(request.body)
             value_list = list(data_dict.values())
-            print("value_list",value_list)
+            
             dinfo = device_info.objects.filter(componant_name=value_list[2], unit_type=value_list[0], company_name=value_list[1])
-            print("dinfo",dinfo)
+            
             for x in dinfo:
                 did = x.Device_id
                 cmpname = x.componant_name
-                print("did id:",did)
+                
             
             qs = treat_rwp.objects.filter(device_id=did).order_by('-id')[:1:1]
-            print("qs is:",qs)
+            
             fields_to_exclude = ['model', 'pk']
             
             data = serialize("json", qs)
-            print("data is:",data)
+            
             data = json.loads(data)
-            print("data after loads is:",data)
+            
             
             for item in data:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
@@ -1045,6 +1045,53 @@ class updated_disp_flowsenViewset(viewsets.ModelViewSet):
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 
+class getDeviceID(viewsets.ModelViewSet):
+	# define queryset
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            did = 0
+            data_dict = json.loads(request.body)
+            value_list = list(data_dict.values())
+            dinfo = device_info.objects.filter(componant_name=value_list[2], unit_type=value_list[1], company_name=value_list[0])
+            # print("value_list",dinfo)
+            # data = serialize("json", dinfo, fields=('Device_id'))
+            # return HttpResponse(data, content_type="application/json")
+
+            fields_to_exclude = ['model', 'pk']
+                
+            data = serialize("json", dinfo)
+            data = json.loads(data)
+            
+            for item in data:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            
+            if not data:
+                response_data = {
+                    'data': [],  # Include the 'data' field
+                    'status': 200,  # Add the status field
+                    'message': "Data not found"  # Add the message field
+                }
+            else:     
+                data = json.dumps(data[0]["fields"])
+                data = json.loads(data)
+                data = [data]
+                response_data = {
+                    'data': data[0],  # Include the 'data' field
+                    'status': 200,  # Add the status field
+                    'message': "Data get successfully"  # Add the message field
+                }
+            response_data=[response_data]
+        except Exception as e:
+                    response_data = {
+                        'data':e,  # Include the 'data' field
+                        'status': 200,  # Add the status field
+                        'message': "Exception found"  # Add the message field
+                    }
+        
+        return JsonResponse(response_data, safe=False, content_type="application/json")
+
+
 class cnd_tds_YearlyViewset(viewsets.ModelViewSet):
 	# define queryset
 	queryset = cnd_tds_repo_yearly.objects.all()
@@ -1527,7 +1574,7 @@ class TopicViewSet(viewsets.ModelViewSet):
 	serializer_class = TopicSerializer
         
 # graphdata = graph_info.objects.last()
-# print("graph data is:",graphdata.service_name,graphdata.device_id)
+
 
 # servi=graphdata.service_name
 # ds_id=graphdata.device_id
@@ -1536,7 +1583,7 @@ class TopicViewSet(viewsets.ModelViewSet):
 #     global servi,ds_id
 #     queryset = cnd_tds_repo_yearly.objects.filter(service=servi,device_id=ds_id)
 #     # graphdata = graph_info.objects.last()
-#     # print("graph data is:",graphdata.service_name,graphdata.device_id)
+
     
 
 # 	# specify serializer to be used
@@ -1626,40 +1673,31 @@ class RwpstateViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass  
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass    
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -1670,19 +1708,19 @@ class RwpstateViewset(viewsets.ModelViewSet):
 
 # dinfo=device_info.objects.filter(componant_name=rwp.componant_name,unit_type=rwp.unit_type,company_name=rwp.company_name)
 # for x in dinfo:
-#     print("did id:",x.Device_id)
+
 #     did=x.Device_id
 #     cmpname=x.componant_name
-#     print("ddddid is",did)
+
 
 class rwpsettingViewset(viewsets.ModelViewSet):
     # authentication_classes = [TokenAuthentication]
     # permission_classes = [permissions.IsAuthenticated]
 	# define queryset
-    print("hi ok ")
+    
     # queryset = rwp_setting.objects.all()
     queryset = rwp_setting.objects.all()
-    print("queryset is",queryset)    
+    
 	# specify serializer to be used
     serializer_class = rwpsettingSerializer
     # authentication_classes = [JWTAuthentication]
@@ -1695,43 +1733,35 @@ class rwpsettingViewset(viewsets.ModelViewSet):
     
     def dispatch(self, request, *args, **kwargs):
         try:
-            print("sssss")
+            
             data_dict = json.loads(request.body)
             # data_dict = request.body
-            unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-            print("dict data is:",data_dict)
+            unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+            
             value_list=list(data_dict.values())
-            print("value_list:",value_list)
+            
             dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
             did = 0
             for x in dinfo:
-                print("did id:",x.Device_id)
+                
                 did=x.Device_id
                 cmpname=x.componant_name
-                print("ddddid is",did)
+                
             for key in unwanted_keys:
                 if key in data_dict:
                     del data_dict[key]
             mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-            print("data send to hivemq")
+            
         # except Exception as e:
         except json.JSONDecodeError as e:
-            print("Errorss",e)
+            pass    
         return super().dispatch(request)    
     def perform_create(self, serializer):
         try:
-            data_dict = serializer.validated_data
-            dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                               unit_type=data_dict['unit_type'],
-                                               company_name=data_dict['company_name']).last()
-            if dinfo:
-                did = dinfo.Device_id
-                cmpname = dinfo.componant_name
-                data_dict['device_id'] = did
             serializer.save()  # Save the data to the database
             
         except Exception as e:
-            print("Error:", e)
+            pass    
     def desptroy(self, request):
         try:
             instance = self.get_object()
@@ -1749,40 +1779,31 @@ class hppstateViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass     
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -1799,40 +1820,31 @@ class hppsettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -1849,46 +1861,27 @@ class cndsettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 did = 0
                 cmpname = ''
                 for x in dinfo:
-                    print("did id:",x.Device_id)
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("cname is:",cmpname)
-                    print("ddddid is",did)
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
 
             except Exception as e:
-                print("Error",e)
+                pass
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                print(data_dict)
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-
-                print(dinfo)
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
-                
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -1908,40 +1901,31 @@ class tdssettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -1960,40 +1944,31 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2012,40 +1987,31 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2063,40 +2029,31 @@ class panelsettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2114,40 +2071,31 @@ class atmsettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2166,40 +2114,31 @@ class consensettingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/updset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2217,40 +2156,31 @@ class ampv1stateViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2269,40 +2199,31 @@ class ampv1settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2320,40 +2241,31 @@ class ampv2stateViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2371,40 +2283,31 @@ class ampv2settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2423,40 +2326,31 @@ class tap1settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2474,40 +2368,31 @@ class tap2settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2525,40 +2410,31 @@ class tap3settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2577,40 +2453,31 @@ class tap4settingViewset(viewsets.ModelViewSet):
         
             try:
                 data_dict = json.loads(request.body)
-                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name"]  # Example of unwanted keys
-                print("dict data is:",data_dict)
+                unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
+                
                 value_list=list(data_dict.values())
-                print("value_list:",value_list)
+                
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    print("did id:",x.Device_id)
+                    
                     did=x.Device_id
                     cmpname=x.componant_name
-                    print("ddddid is",did)
+                    
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                print("data send to hivemq")
+                
 
             except Exception as e:
-                print("Error",e)
+                pass    
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
-                data_dict = serializer.validated_data
-                # Get the device information based on the provided values
-                dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
-                                                unit_type=data_dict['unit_type'],
-                                                company_name=data_dict['company_name']).last()
-                if dinfo:
-                    did = dinfo.Device_id
-                    cmpname = dinfo.componant_name
-                    data_dict['device_id'] = did
                 serializer.save()  # Save the data to the database
                 
             except Exception as e:
-                print("Error:", e)
+                pass        
         def desptroy(self, request):
             try:
                 instance = self.get_object()
@@ -2620,7 +2487,7 @@ class tap4settingViewset(viewsets.ModelViewSet):
         
 
 def Treat_cnd(request):
-    print("hello")
+    
     return render(request,'test.html')
 
 
@@ -2700,35 +2567,35 @@ def Treat_cnd(request):
 # asp=0
 
 def testo(request):
-    print("btesto")
+    
     def on_connect(mqtt_client, userdata, flags, rc):
         if rc == 0:
-            print('Connected successfully')
+            
             mqtt_client.subscribe('wc/#')
             # topicdata=topics.objects.all()
             # for top in topicdata:
-            #     print("topic is:",top)
-            # print("Topic data is:",topicdata)
+            
+            
             # topicdata=dict(topicdata)
             # for k, v in topicdata.items():
             #     if k=='Topic_name':
             # mqtt_client.subscribe('django/mqtt')
         else:
-            print('Bad connection. Code:', rc)
+            pass
 
 
     def on_message(mqtt_client, userdata, msg):
         # global cnd,spn,tsp,asp,sts,crt,olc,drc,rtl,ttl,lps,hps,dgp,mod,ipv,unv,ovv,nmv,stp,srt,bkt,rst,err,fr1,fr2,ff1,ff2,pos,rmt,cct,srt,bkt,mot,stp,op1,op2,op3,ip1,ip2,ip3,psi,ndv,ntt,nta,tmp,ntp,nov,vl1,vl2,vl3,vl4,re1,re2,re3,re4,p1,p2,p3,p4,cnd,spn,asp
         global msgo
-        print(f'Received message on topic: {msg.topic} with payload: {msg.payload}')
+        
         jstring=msg.payload
-        print("vikaso:",jstring)
+        
         # mydata1=0
         dict_str = jstring.decode("UTF-8")
-        print("decoded:",dict_str,type(dict_str))
+        
         rep1=dict_str.replace("}",'')
         rep2=rep1.replace("{",'')
-        print('********************************rep1',rep2)
+        
         array_dat = rep2.split(',')
         mydata ={}
 
@@ -2793,9 +2660,9 @@ def testo(request):
         p4=0
 
         for loop_data in array_dat:
-            print("array_dat",loop_data)
+            
             removed_col = loop_data.split(':')
-            print("removed_col",removed_col)
+            
             mydata[removed_col[0]] =removed_col[1]
 
 
@@ -2924,29 +2791,29 @@ def testo(request):
            
            
            
-        print("sts", sts)
+        
 
-        print("mydata before dump:",mydata,type(mydata))  
+        
         mydata1=mydata      
         mydata = json.dumps(mydata, indent = 4) 
         # mydata = ast.literal_eval(mydata)
         # mydata = ast.literal_eval(dict_str)
-        print("final data:",mydata,type(mydata))
+        
         mydatadict=json.loads(mydata)
-        print(mydatadict,type(mydatadict))
+        
         hmq=msg.topic
         hmqm_split=hmq.split('/')
-        print(hmqm_split)
+        
         device_id=hmqm_split[1]
         msg_type=hmqm_split[2]
         components=hmqm_split[3]
-        print("*"*10,mydata)
+        
         od=mydata.strip()
-        print("#"*10,od)
+        
         repo_histobj=repo_history.objects.create(device_id=device_id,message_type=msg_type,component_name=components,msg_json=mydata1)
         repo_histobj.save()
         get_device_id=repo_latestdata.objects.all()
-        # print(get_device_id.)
+        
         device_idlist=[]
         tds1={}
         rwp={}
@@ -2966,66 +2833,62 @@ def testo(request):
         consen={}
 
         monthset=set()
-        print("device id is:",device_id,type(device_id))
+        
         for did in get_device_id:
              s=str(did.device_id)
              if device_id == s:
-                print("latest data is:",did.device_id)
-                print("latest data is:",did.message_type)
+                
+                
                 tds=did.cnd_tds
                 tds1=tds
                 # tdsstr=(str(tds))
-                print("tdso data is:",tds,type(tds))
-                print("latest data is:",did.cnd_tds,type(did.cnd_tds))
+                
+                
                 rwp=did.rwp
-                print("latest data is:",did.rwp)
+                
                 hpp=did.hpp
-                print("latest data is:",did.hpp)
+                
                 panel=did.panel
-                print("latest data is:",did.panel)
+                
                 flowsen=did.flowsen
-                print("latest data is:",did.flowsen)
+                
                 ampv1=did.ampv1
-                print("latest data is:",did.ampv1)
+                
                 ampv2=did.ampv2
-                print("latest data is:",did.ampv2)
+                
                 ampv3=did.ampv3
-                print("latest data is:",did.ampv3)
+                
                 ampv4=did.ampv4
-                print("latest data is:",did.ampv4)
+                
                 ampv5=did.ampv5
-                print("latest data is:",did.ampv5)
+                
                 atm=did.atm
-                print("latest data is:",did.atm)
+                
                 tap1=did.tap1
-                print("latest data is:",did.tap1)
+                
                 tap2=did.tap2
-                print("latest data is:",did.tap2)
+                
                 tap3=did.tap3
-                print("latest data is:",did.tap3)
+                
                 tap4=did.tap4
-                print("latest data is:",did.tap4)
+                
                 consen=did.consen
-                print("latest data is:",did.consen)
+                
              device_idlist.append(s)
-             print(device_idlist)
-        print("component is:",components)
+             
+        
         service_list=[]
         repoyearly=cnd_tds_repo_yearly.objects.all()
         for ry in repoyearly:
                 ser=ry.service
                 service_list.append(ser)
-                print("service is:",ser)
-        print("out of for loop")
+                
+        
         olddata={}
         hourset=set()
         dd=dateandtime() 
-        print("$$$$$$$ddn is:",dd,type(dd)) 
-        print(dd[0]) 
         try:
             if 'cnd_tds'== components:
-                # com=cl
-                print("in cndtds")
                 if device_id not in device_idlist:
                      repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,cnd_tds=mydata1)
                 else:
@@ -3035,29 +2898,29 @@ def testo(request):
                     for did in get_device_id:
                         s=str(did.device_id)
                         if device_id == s:
-                            print("latest data is:",did.device_id)
-                            print("latest data is:",did.message_type)
+                            
+                            
                             tds=did.cnd_tds
                             tds1=tds
                             # tdsstr=(str(tds))
-                            print("tdso data is:",tds,type(tds))
-                            print("latest data is:",did.cnd_tds,type(did.cnd_tds))
+                            
+                            
 
                     klist = list(tds1.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in tds1.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_tds=olddata)
                 
                 dd=dateandtime()  
-                print("$$$$$$$dd is:",dd,type(dd)) 
-                print(dd[0])
+                
+                
                 ds=treat_cnd_tds_sen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,tsp=tsp,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 ds.save()
                 # Hour
@@ -3081,17 +2944,17 @@ def testo(request):
                             spns=yr.spn
                             tsps=yr.tsp
                             asps=yr.asp
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
-                            print("sums is:",sums_cnd)
-                            print("count is:",count)
+                            
+                            
                             if cnds or spns or tsp or asp == 0:
                                 zerocount=zerocount+1
-                                print("countzone is:",zerocount)
+                                
                     count1=count-zerocount
                     avgs_cnd=sums_cnd/count
                     avgs_spn=sums_spn/count
@@ -3129,10 +2992,10 @@ def testo(request):
                 avgs_asp = 0
                 if yrdata:
                     for yr in yrdata:
-                        print("day for loop")
+                        
                         yr_d_id=yr.device_id
                         if yr_d_id == device_id:
-                            print("in if")
+                            
                             cnds_d=yr.cnd
                             spns_d=yr.spn
                             tsps_d=yr.tsp
@@ -3151,37 +3014,37 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=cnd_tds_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 if hr:
-                    print("in if hr")
+                    
                     yr_data=cnd_tds_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='cnd_tds',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
-                    print("data insertedd")
+                    
                 else:
                     yr_data=cnd_tds_repo_daily.objects.create(device_id=device_id,service='cnd_tds',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                     yr_data.save()
-                    print("success")
+                    
                  #month
-                print("in month")
+                
                 yrdata=treat_cnd_tds_sen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                 count=0
                 sums_cnd=0
@@ -3200,14 +3063,14 @@ def testo(request):
                             spns=yr.spn
                             tsps=yr.tsp
                             asps=yr.asp
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
-                            print("sums is:",sums_cnd)
-                            print("count is:",count)                            
+                            
+                            
                             if cnds or spns or tsp or asp == 0:
                                 zerocount=zerocount+1
                     # count1=count-zerocount
@@ -3257,14 +3120,14 @@ def testo(request):
                             spns=yr.spn
                             tsps=yr.tsp
                             asps=yr.asp
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
-                            print("sums is:",sums_cnd)
-                            print("count is:",count)
+                            
+                            
                             if cnds or spns or tsp or asp == 0:
                                 zerocount=zerocount+1
                     # count1=count-zerocount
@@ -3305,11 +3168,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -3329,11 +3192,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -3345,7 +3208,7 @@ def testo(request):
                 # return result
                 
         except Exception as e:
-            print("error ==>", e)
+            
             # error_message = traceback.format_exc()
         
         # Send the error message to the WebSocket client
@@ -3353,8 +3216,8 @@ def testo(request):
             error_message = e
             global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event')
             
             # raise e
@@ -3381,19 +3244,19 @@ def testo(request):
                             rwp=did.rwp
                             # rwp=rwp
                     klist = list(rwp.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in rwp.items():
                         if k not in mydatakey:
                             olddata.update({k:v})
                             
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, rwp=olddata)
                 dd=dateandtime()  
-                print("$$$$$$$dd is:",dd,type(dd)) 
-                print(dd[0])
+                
+                
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,rwp=mydata1)
                 ds=treat_rwp.objects.create(device_id=device_id,message_type=msg_type,sts=sts,crt=crt,olc=olc,drc=drc,spn=spn,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 ds.save()
@@ -3418,19 +3281,19 @@ def testo(request):
                             spns=yr.olc
                             tsps=yr.drc
                             asps=yr.spn
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
-                            print("sums is:",sums_cnd)
-                            print("count is:",count)
+                            
+                            
                     avgs_cnd=sums_cnd/count
                     avgs_spn=sums_spn/count
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
-                    print("@@@")
+                    
                
                 hr=rwp_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 if hr:
@@ -3457,10 +3320,10 @@ def testo(request):
                 avgs_asp = 0
                 if yrdata:
                     for yr in yrdata:
-                        print("day for loop")
+                        
                         yr_d_id=yr.device_id
                         if yr_d_id == device_id:
-                            # print("in if")
+                            
                             # cnds_d=yr.crt
                             # spns_d=yr.olc
                             # tsps_d=yr.drc
@@ -3486,38 +3349,38 @@ def testo(request):
                             spns=yr.olc
                             tsps=yr.drc
                             asps=yr.spn
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             # count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn00:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=rwp_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 if hr:
-                    print("in if hr")
+                    
                     yr_data=rwp_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
-                    print("data insertedd")
+                    
                 else:
                     yr_data=rwp_repo_daily.objects.create(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                     yr_data.save()
@@ -3560,7 +3423,7 @@ def testo(request):
                             spns=yr.olc
                             tsps=yr.drc
                             asps=yr.spn
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
@@ -3569,24 +3432,24 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             # count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=rwp_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
@@ -3635,7 +3498,7 @@ def testo(request):
                             spns=yr.olc
                             tsps=yr.drc
                             asps=yr.spn
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
@@ -3644,24 +3507,24 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             # count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn11:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=rwp_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
@@ -3680,13 +3543,13 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
-                #     print('avg is:',avgs)
+                
                 # hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
                 # if hr:
                 #     yr_data=repo_yearly.objects.filter(device_id=device_id).update(device_id=device_id,service='hpp',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
@@ -3704,11 +3567,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -3727,11 +3590,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -3751,11 +3614,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 
                 # hr=repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
@@ -3767,12 +3630,12 @@ def testo(request):
                 
         
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event')           
         try:
             if 'hpp'==components:
@@ -3788,15 +3651,15 @@ def testo(request):
                         if device_id == s:
                             hpp=did.hpp
                     klist = list(hpp.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in hpp.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, hpp=olddata)
 
                 ds=treat_hpp.objects.create(device_id=device_id,message_type=msg_type,sts=sts,crt=crt,olc=olc,drc=drc,spn=spn,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -3821,19 +3684,19 @@ def testo(request):
                             spns=yr.olc
                             tsps=yr.drc
                             asps=yr.spn
-                            print("cnds is:",cnds)
+                            
                             sums_cnd=sums_cnd+cnds
                             sums_spn=sums_spn+spns
                             sums_tsp=sums_tsp+tsps
                             sums_asp=sums_asp+asps
                             count=count+1
-                            print("sums is:",sums_cnd)
-                            print("count is:",count)
+                            
+                            
                     avgs_cnd=sums_cnd/count
                     avgs_spn=sums_spn/count
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
-                    print("@@@")
+                    
                
                 hr=hpp_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 if hr:
@@ -3860,10 +3723,10 @@ def testo(request):
                 avgs_asp = 0
                 if yrdata:
                     for yr in yrdata:
-                        print("day for loop")
+                        
                         yr_d_id=yr.device_id
                         if yr_d_id == device_id:
-                            print("in if")
+                            
                             cnds=yr.crt
                             spns=yr.olc
                             tsps=yr.drc
@@ -3887,31 +3750,31 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             # count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=hpp_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 if hr:
-                    print("in if hr")
+                    
                     yr_data=hpp_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
-                    print("data insertedd")
+                    
                 else:
                     yr_data=hpp_repo_daily.objects.create(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                     yr_data.save()
@@ -3953,24 +3816,24 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=hpp_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
@@ -4007,24 +3870,24 @@ def testo(request):
                             count_sum=count_sum+count_cnd
 
 
-                            print("sum from dict:",sums_cnd,type(sums_cnd))
+                            
                             # spns=yr.spn[1]
                             # tsps=yr.tsp[2]
                             # asps=yr.asp[3]
-                            print("cnds is:",cnds)
+                            
                             # sums_cnd=sums_cnd+cnds
                             # sums_spn=sums_spn+spns
                             # sums_tsp=sums_tsp+tsps
                             # sums_asp=sums_asp+asps
                             count=count+1
-                            print("count is:",count)
-                    print("sums is:",sums_cnd)
-                    print("countsum is:",count_sum)
+                            
+                    
+                    
                     avgs_cnd=sums_cnd/count
-                    print("average cnd is:",avgs_cnd)
+                    
 
                     avgs_spn=sums_spn/count
-                    print("avg of spn:",avgs_spn)
+                    
                     avgs_tsp=sums_tsp/count
                     avgs_asp=sums_asp/count
                 hr=hpp_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
@@ -4042,13 +3905,13 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
-                #     print('avg is:',avgs)
+                
                 # hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
                 # if hr:
                 #     yr_data=repo_yearly.objects.filter(device_id=device_id).update(device_id=device_id,service='hpp_crt',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
@@ -4065,11 +3928,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -4087,11 +3950,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -4109,11 +3972,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             crt=yr.crt
-                #             print("crt is:",crt)
+                
                 #             sums=sums+crt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 # if hr:
@@ -4123,12 +3986,12 @@ def testo(request):
                 #     yr_data.save()
                 
                 # end_date = local_tz.localize(datetime.datetime.now())
-                # print("first end date is:",end_date)
+                
                 # end_date = end_date.replace(tzinfo=local_tz)
-                # print("replaced date :",end_date)
+                
                 # # start_date = end_date + relativedelta(hours=-8760)
                 # start_date = end_date + relativedelta(hours=-1)
-                # print("staredate is:",start_date)
+                
                 # yrdata=treat_hpp.objects.filter(created_at__range=(start_date, end_date))
                 # count=0
                 # sums=0
@@ -4136,25 +3999,25 @@ def testo(request):
                 #     yr_d_id=yr.device_id
                 #     if yr_d_id == device_id:
                 #         crt=yr.crt
-                #         print("crt is:",crt)
+                
                 #         sums=sums+crt
                 #         count=count+1
-                #         print("sums is:",sums)
-                #         print("count is:",count)
+                
+                
                 # avgs=sums/count
-                # print('avg is:',avgs)
+                
                 # if device_id not in device_idlist:
                 #     yr_data=repo_hourly.objects.create(device_id=device_id,service='hpp_crt',sum=sums,count=count,avg=avgs)
                 #     yr_data.save()
                 # else:
                 #     yr_data=repo_hourly.objects.filter(device_id=device_id).update(device_id=device_id,service='hpp_crt',sum=sums,count=count,avg=avgs)
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event')  
         try:
             if 'panel'==components:
@@ -4170,15 +4033,15 @@ def testo(request):
                         if device_id == s:
                             panel=did.panel
                     klist = list(panel.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in panel.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, panel=olddata)
 
                 ds=treat_panel.objects.create(device_id=device_id,message_type=msg_type,sts=sts,rtl=rtl,ttl=ttl,lps=lps,hps=hps,dgp=dgp,mod=mod,ipv=ipv,unv=unv,ovv=ovv,spn=spn,nmv=nmv,stp=stp,srt=srt,bkt=bkt,rst=rst,err=err,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -4223,11 +4086,11 @@ def testo(request):
                             sums_bkt=sums_bkt+bkt
                             sums_rst=sums_rst+rst
                             count=count+1
-                            print("count is:",count)
+                            
                     avgs_ipv=sums_ipv/count
-                    print("average cnd is:",avgs_ipv)
+                    
                     avgs_unv=sums_unv/count
-                    print("avg of spn:",avgs_unv)
+                    
                     avgs_ovv=sums_ovv/count
                     avgs_spn=sums_spn/count
                     avgs_nmv=sums_nmv/count
@@ -4280,11 +4143,11 @@ def testo(request):
                             sums_bkt=sums_bkt+bkt
                             sums_rst=sums_rst+rst
                             count=count+1
-                            print("count is:",count)
+                            
                     avgs_ipv=sums_ipv/count
-                    print("average cnd is:",avgs_ipv)
+                    
                     avgs_unv=sums_unv/count
-                    print("avg of spn:",avgs_unv)
+                    
                     avgs_ovv=sums_ovv/count
                     avgs_spn=sums_spn/count
                     avgs_nmv=sums_nmv/count
@@ -4337,11 +4200,11 @@ def testo(request):
                             sums_bkt=sums_bkt+bkt
                             sums_rst=sums_rst+rst
                             count=count+1
-                            print("count is:",count)
+                            
                     avgs_ipv=sums_ipv/count
-                    print("average cnd is:",avgs_ipv)
+                    
                     avgs_unv=sums_unv/count
-                    print("avg of spn:",avgs_unv)
+                    
                     avgs_ovv=sums_ovv/count
                     avgs_spn=sums_spn/count
                     avgs_nmv=sums_nmv/count
@@ -4394,11 +4257,11 @@ def testo(request):
                             sums_bkt=sums_bkt+bkt
                             sums_rst=sums_rst+rst
                             count=count+1
-                            print("count is:",count)
+                            
                     avgs_ipv=sums_ipv/count
-                    print("average cnd is:",avgs_ipv)
+                    
                     avgs_unv=sums_unv/count
-                    print("avg of spn:",avgs_unv)
+                    
                     avgs_ovv=sums_ovv/count
                     avgs_spn=sums_spn/count
                     avgs_nmv=sums_nmv/count
@@ -4412,12 +4275,12 @@ def testo(request):
                     yr_data=panel_repo_yearly.objects.create(device_id=device_id,service='panel',ipv={'sum':sums_ipv,'avg':avgs_ipv,'count':count},unv={'sum':sums_unv,'avg':avgs_unv,'count':count},ovv={'sum':sums_ovv,'avg':avgs_ovv,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},nmv={'sum':sums_nmv,'avg':avgs_nmv,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                     yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:
             if 'flowsen'==components:
@@ -4434,15 +4297,15 @@ def testo(request):
                             flowsen=did.flowsen
 
                     klist = list(flowsen.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in flowsen.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is111:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,flowsen=mydata1)
@@ -4605,11 +4468,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             fr1=yr.fr1
-                #             print("fr1 is:",fr1)
+                
                 #             sums=sums+fr1
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_yearly.objects.filter(service='flowsen_fr1',year=dd[0],device_id=device_id)
                 # if hr:
@@ -4630,11 +4493,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             fr2=yr.fr2
-                #             print("fr2 is:",fr2)
+                
                 #             sums=sums+fr2
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_yearly.objects.filter(service='flowsen_fr2',year=dd[0],device_id=device_id)
                 # if hr:
@@ -4653,11 +4516,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr1=yr.fr1
-            #                 print("fr1 is:",fr1)
+            
             #                 sums=sums+fr1
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='flowsen_fr1',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -4674,11 +4537,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr2=yr.fr2
-            #                 print("fr2 is:",fr2)
+            
             #                 sums=sums+fr2
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='flowsen_fr2',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -4697,11 +4560,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr1=yr.fr1
-            #                 print("fr1 is:",fr1)
+            
             #                 sums=sums+fr1
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='flowsen_fr1',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -4718,11 +4581,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr2=yr.fr2
-            #                 print("fr2 is:",fr2)
+            
             #                 sums=sums+fr2
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='flowsen_fr2',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -4740,11 +4603,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr1=yr.fr1
-            #                 print("fr1 is:",fr1)
+            
             #                 sums=sums+fr1
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='flowsen_fr1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -4762,11 +4625,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 fr2=yr.fr2
-            #                 print("fr2 is:",fr2)
+            
             #                 sums=sums+fr2
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='flowsen_fr2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -4775,12 +4638,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='flowsen_fr2',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event')     
         try:
             if 'ampv1'==components:
@@ -4796,15 +4659,15 @@ def testo(request):
                         if device_id == s:
                             ampv1=did.ampv1
                     klist = list(ampv1.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in ampv1.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, ampv1=olddata)
 
                 ds=treat_ampv1.objects.create(device_id=device_id,message_type=msg_type,pos=pos,rmt=rmt,cct=cct,srt=srt,bkt=bkt,rst=rst,mot=mot,stp=stp,op1=op1,op2=op2,op3=op3,ip1=ip1,ip2=ip2,ip3=ip3,psi=psi,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -5007,11 +4870,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv1_rmt',year=dd[0],device_id=device_id)
             #     if hr:
@@ -5028,11 +4891,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv1_cct',year=dd[0],device_id=device_id)
             #     if hr:
@@ -5049,11 +4912,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv1_rmt',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -5070,11 +4933,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv1_cct',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -5092,11 +4955,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv1_rmt',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -5113,11 +4976,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv1_cct',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -5135,11 +4998,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv1_rmt',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -5156,11 +5019,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv1_cct',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -5169,12 +5032,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv1_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:
             if 'ampv2'==components:
@@ -5191,15 +5054,15 @@ def testo(request):
                         if device_id == s:
                             ampv2=did.ampv2
                     klist = list(ampv2.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in ampv2.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, ampv2=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,ampv2=mydata1)
@@ -5405,11 +5268,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv2_rmt',year=dd[0],device_id=device_id)
             #     if hr:
@@ -5426,11 +5289,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv2_cct',year=dd[0],device_id=device_id)
             #     if hr:
@@ -5449,11 +5312,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv2_rmt',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -5470,11 +5333,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv2_cct',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -5492,11 +5355,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv2_rmt',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -5513,11 +5376,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv2_cct',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -5535,11 +5398,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv2_rmt',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -5556,11 +5419,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv2_cct',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -5569,12 +5432,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv2_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:
             if 'ampv3'==components:
@@ -5590,15 +5453,15 @@ def testo(request):
                         if device_id == s:
                             ampv3=did.ampv3
                     klist = list(ampv3.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in ampv3.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, ampv3=olddata)
 
                 ds=treat_ampv3.objects.create(device_id=device_id,message_type=msg_type,pos=pos,rmt=rmt,cct=cct,srt=srt,bkt=bkt,rst=rst,mot=mot,stp=stp,op1=op1,op2=op2,op3=op3,ip1=ip1,ip2=ip2,ip3=ip3,psi=psi,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -5801,11 +5664,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             rmt=yr.rmt
-                #             print("rmt is:",rmt)
+                
                 #             sums=sums+rmt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_yearly.objects.filter(service='ampv3_rmt',year=dd[0],device_id=device_id)
                 # if hr:
@@ -5822,11 +5685,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cct=yr.cct
-                #             print("cct is:",cct)
+                
                 #             sums=sums+cct
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_yearly.objects.filter(service='ampv3_cct',year=dd[0],device_id=device_id)
                 # if hr:
@@ -5844,11 +5707,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             rmt=yr.rmt
-                #             print("rmt is:",rmt)
+                
                 #             sums=sums+rmt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(service='ampv3_rmt',year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -5865,11 +5728,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cct=yr.cct
-                #             print("cct is:",cct)
+                
                 #             sums=sums+cct
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(service='ampv3_cct',year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -5888,11 +5751,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             rmt=yr.rmt
-                #             print("rmt is:",rmt)
+                
                 #             sums=sums+rmt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(service='ampv3_rmt',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -5909,11 +5772,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cct=yr.cct
-                #             print("cct is:",cct)
+                
                 #             sums=sums+cct
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(service='ampv3_cct',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -5933,11 +5796,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             rmt=yr.rmt
-                #             print("rmt is:",rmt)
+                
                 #             sums=sums+rmt
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_hourly.objects.filter(service='ampv3_rmt',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 # if hr:
@@ -5954,11 +5817,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cct=yr.cct
-                #             print("cct is:",cct)
+                
                 #             sums=sums+cct
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_hourly.objects.filter(service='ampv3_cct',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 # if hr:
@@ -5967,12 +5830,12 @@ def testo(request):
                 #     yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv3_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #     yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:        
             if 'ampv4'==components:
@@ -5988,15 +5851,15 @@ def testo(request):
                         if device_id == s:
                             ampv4=did.ampv4
                     klist = list(ampv4.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in ampv4.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, ampv4=olddata)
 
                 ds=treat_ampv4.objects.create(device_id=device_id,message_type=msg_type,pos=pos,rmt=rmt,cct=cct,srt=srt,bkt=bkt,rst=rst,mot=mot,stp=stp,op1=op1,op2=op2,op3=op3,ip1=ip1,ip2=ip2,ip3=ip3,psi=psi,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -6200,11 +6063,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv4_rmt',year=dd[0],device_id=device_id)
             #     if hr:
@@ -6221,11 +6084,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv4_cct',year=dd[0],device_id=device_id)
             #     if hr:
@@ -6244,11 +6107,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv4_rmt',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -6265,11 +6128,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv4_cct',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -6289,11 +6152,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv4_rmt',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -6310,11 +6173,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv4_cct',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -6333,11 +6196,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv4_rmt',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -6354,11 +6217,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv4_cct',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -6367,12 +6230,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv4_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:       
             if 'ampv5'==components:
@@ -6388,15 +6251,15 @@ def testo(request):
                         if device_id == s:
                             ampv5=did.ampv5
                     klist = list(ampv5.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in ampv5.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, ampv5=olddata)
 
                 ds=treat_ampv5.objects.create(device_id=device_id,message_type=msg_type,pos=pos,rmt=rmt,cct=cct,srt=srt,bkt=bkt,rst=rst,mot=mot,stp=stp,op1=op1,op2=op2,op3=op3,ip1=ip1,ip2=ip2,ip3=ip3,psi=psi,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -6601,11 +6464,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv5_rmt',year=dd[0],device_id=device_id)
             #     if hr:
@@ -6622,11 +6485,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(service='ampv5_cct',year=dd[0],device_id=device_id)
             #     if hr:
@@ -6645,11 +6508,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv5_rmt',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -6666,11 +6529,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(service='ampv5_cct',year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -6689,11 +6552,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv5_rmt',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -6710,11 +6573,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(service='ampv5_cct',year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -6733,11 +6596,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 rmt=yr.rmt
-            #                 print("rmt is:",rmt)
+            
             #                 sums=sums+rmt
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv5_rmt',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -6754,11 +6617,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 cct=yr.cct
-            #                 print("cct is:",cct)
+            
             #                 sums=sums+cct
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='ampv5_cct',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -6767,12 +6630,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv5_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
         try:
             if 'atm'==components:
@@ -6788,15 +6651,15 @@ def testo(request):
                         if device_id == s:
                             atm=did.atm
                     klist = list(atm.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in atm.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, atm=olddata)
 
                 ds=disp_atm.objects.create(device_id=device_id,message_type=msg_type,sts=sts,ndv=ndv,ntt=ntt,nta=nta,tmp=tmp,ntp=ntp,nov=nov,vl1=vl1,vl2=vl2,vl3=vl3,vl4=vl4,re1=re1,re2=re2,re3=re3,re4=re4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -7138,11 +7001,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 ndv=yr.ndv
-            #                 print("ndv is:",ndv)
+            
             #                 sums=sums+ndv
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
             #     if hr:
@@ -7161,11 +7024,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 nta=yr.nta
-            #                 print("nta is:",nta)
+            
             #                 sums=sums+nta
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
             #     if hr:
@@ -7184,11 +7047,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 tmp=yr.tmp
-            #                 print("tmp is:",tmp)
+            
             #                 sums=sums+tmp
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
             #     if hr:
@@ -7208,11 +7071,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 ndv=yr.ndv
-            #                 print("ndv is:",ndv)
+            
             #                 sums=sums+ndv
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -7229,11 +7092,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 nta=yr.nta
-            #                 print("nta is:",nta)
+            
             #                 sums=sums+nta
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -7250,11 +7113,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 tmp=yr.tmp
-            #                 print("tmp is:",tmp)
+            
             #                 sums=sums+tmp
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
             #     if hr:
@@ -7273,11 +7136,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 ndv=yr.ndv
-            #                 print("ndv is:",ndv)
+            
             #                 sums=sums+ndv
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -7294,11 +7157,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 nta=yr.nta
-            #                 print("nta is:",nta)
+            
             #                 sums=sums+nta
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -7315,11 +7178,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 tmp=yr.tmp
-            #                 print("tmp is:",tmp)
+            
             #                 sums=sums+tmp
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
             #     if hr:
@@ -7338,11 +7201,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 ndv=yr.ndv
-            #                 print("ndv is:",ndv)
+            
             #                 sums=sums+ndv
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='atm_ndv',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -7360,11 +7223,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 nta=yr.nta
-            #                 print("nta is:",nta)
+            
             #                 sums=sums+nta
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='atm_nta',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -7382,11 +7245,11 @@ def testo(request):
             #             yr_d_id=yr.device_id
             #             if yr_d_id == device_id:
             #                 tmp=yr.tmp
-            #                 print("tmp is:",tmp)
+            
             #                 sums=sums+tmp
             #                 count=count+1
-            #                 print("sums is:",sums)
-            #                 print("count is:",count)
+            
+            
             #         avgs=sums/count
             #     hr=repo_hourly.objects.filter(service='atm_tmp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
             #     if hr:
@@ -7395,12 +7258,12 @@ def testo(request):
             #         yr_data=repo_hourly.objects.create(device_id=device_id,service='atm_tmp',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
             #         yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event')        
         if 'tap1'==components:
                 # com=cl
@@ -7417,15 +7280,15 @@ def testo(request):
                         if device_id == s:
                             tap1=did.tap1
                     klist = list(tap1.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in tap1.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap1=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap1=mydata1)
@@ -7590,15 +7453,15 @@ def testo(request):
                         if device_id == s:
                             tap2=did.tap2
                     klist = list(tap2.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in tap2.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap2=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap2=mydata1)
@@ -7764,15 +7627,15 @@ def testo(request):
                             tap3=did.tap3
                     
                     klist = list(tap3.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in tap3.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap3=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap3=mydata1)
@@ -7937,15 +7800,15 @@ def testo(request):
                         if device_id == s:
                             tap4=did.tap4
                     klist = list(tap4.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in tap4.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap4=olddata)
 
                 # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap4=mydata1)
@@ -8111,15 +7974,15 @@ def testo(request):
                         if device_id == s:
                             consen=did.consen
                     klist = list(consen.keys())
-                    print("klist is:",klist)
+                    
                     mydatakey = list(mydata1.keys())
-                    print("mydatakey:",mydatakey)
+                    
                     for k,v in consen.items():
                          if k not in mydatakey:
                               olddata.update({k:v})
                               
                     mydata5=olddata.update(mydata1)    
-                    print("old data is:",olddata) # add/update keys in mydata1 to olddata
+                    
                     repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, consen=olddata)
 
                 ds=disp_consen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
@@ -8273,11 +8136,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
                 # if hr:
@@ -8296,11 +8159,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                 # if hr:
@@ -8319,11 +8182,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                 # if hr:
@@ -8342,11 +8205,11 @@ def testo(request):
                 #         yr_d_id=yr.device_id
                 #         if yr_d_id == device_id:
                 #             cnds=yr.cnd
-                #             print("cnds is:",cnds)
+                
                 #             sums=sums+cnds
                 #             count=count+1
-                #             print("sums is:",sums)
-                #             print("count is:",count)
+                
+                
                 #     avgs=sums/count
                 # hr=repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                 # if hr:
@@ -8355,19 +8218,19 @@ def testo(request):
                 #     yr_data=repo_hourly.objects.create(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #     yr_data.save()
         except Exception as e:
-            print("error ==>", e)
+            
             error_message = e
             # global eg
             eg = e
-            print("eg is:",eg)
-            print("Error massage:",e)
+            
+            
             EchoConsumer.websocket_receive('event','event') 
 
 
         # class EchoConsumer(SyncConsumer):
         #     def websocket_connect(self, event):
             
-        #         print("connect event is called")
+        
 
         #         self.send({
         #             'type': 'websocket.accept'
@@ -8375,7 +8238,7 @@ def testo(request):
 
         #     def websocket_receive(self, event):
             
-        #         print("event in receive", event)
+        
         #         # msg=input("Enter message: ")
         #         # if msgo:
         #         try:
@@ -8384,7 +8247,7 @@ def testo(request):
         #             # Process the result
                     
         #         except Exception as e:
-        #             print("First error:", e)
+        
         #         try:
         #             # Simulate an exception
         #             1 / 0
@@ -8404,7 +8267,7 @@ def testo(request):
         #         self.websocket_receive(event)
 
         # #    async def websocket_disconnect(self, event):
-        # #         print("connection is disconnected")
+        
 
         #     def disconnect(self, close_code):
         # # Leave room group
