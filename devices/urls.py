@@ -128,7 +128,7 @@ router.register(r'updated-disp_tap2',updated_disp_tap1Viewset,basename='disp_tap
 router.register(r'updated_disp_tap3',updated_disp_tap1Viewset,basename='disp_tap3')
 router.register(r'updated_disp_tap4',updated_disp_tap1Viewset,basename='disp_tap4')
 router.register(r'updated_disp_atm',updated_disp_atmViewset,basename='disp_atm')
-
+router.register(r'get_device_id',getDeviceID,basename='get_device_id')
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
