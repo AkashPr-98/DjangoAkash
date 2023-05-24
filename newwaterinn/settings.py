@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     # 'channels',
     'rest_framework',
     'corsheaders',
-    'devices',
+    'devices.apps.DevicesConfig',
 ]
 # INSTALLED_APPS = [
 #     # 'devices.apps.DevicesConfig',
