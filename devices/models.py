@@ -158,7 +158,26 @@ class disp_tap4(models.Model):
     second=models.CharField(max_length=50)
     class Meta:
         app_label = 'devices'
-class disp_consen(models.Model):
+class disp_cnd_consen(models.Model):
+    device_id=models.CharField(max_length=100)
+    message_type=models.CharField(max_length=50)
+    cnd=models.BigIntegerField(null=True,blank=True)
+    spn=models.BigIntegerField(null=True,blank=True)
+    asp=models.BigIntegerField(null=True,blank=True)
+    year=models.CharField(max_length=50)
+    month=models.CharField(max_length=50)
+    day=models.CharField(max_length=50)
+    hour=models.CharField(max_length=50)
+    minit=models.CharField(max_length=50)
+    second=models.CharField(max_length=50)
+    is_active=models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        app_label = 'devices'
+
+class disp_tds_consen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     cnd=models.BigIntegerField(null=True,blank=True)
@@ -398,12 +417,29 @@ class treat_panel(models.Model):
 
     class Meta:
         app_label = 'devices'
-class treat_flowsen(models.Model):
+class treat_F_flowsen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     fr1=models.BigIntegerField(null=True,blank=True)
-    fr2=models.BigIntegerField(null=True,blank=True)
     ff1=models.BigIntegerField(null=True,blank=True)
+    year=models.CharField(max_length=50)
+    month=models.CharField(max_length=50)
+    day=models.CharField(max_length=50)
+    hour=models.CharField(max_length=50)
+    minit=models.CharField(max_length=50)
+    second=models.CharField(max_length=50)
+    is_active=models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+    class Meta:
+        app_label = 'devices'
+
+class treat_P_flowsen(models.Model):
+    device_id=models.CharField(max_length=100)
+    message_type=models.CharField(max_length=50)
+    fr2=models.BigIntegerField(null=True,blank=True)
     ff2=models.BigIntegerField(null=True,blank=True)
     year=models.CharField(max_length=50)
     month=models.CharField(max_length=50)
@@ -418,6 +454,7 @@ class treat_flowsen(models.Model):
 
     class Meta:
         app_label = 'devices'
+
 class repo_latestdata(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
@@ -1102,15 +1139,12 @@ class ampv5_repo_yearly(models.Model):
         return self.device_id,self.service,self.rmt,self.cct,self.srt,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class flowsen_repo_hourly(models.Model):
+class F_flowsen_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
     fr1=models.JSONField(null=True,blank=True)
-    fr2=models.JSONField(null=True,blank=True)
     ff1=models.JSONField(null=True,blank=True)
-    ff2=models.JSONField(null=True,blank=True)
-    # avg=models.f(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     month =  models.CharField(max_length=50)
@@ -1118,19 +1152,17 @@ class flowsen_repo_hourly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.fr1,self.fr2,self.ff1,self.created_at,self.updated_at
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr1,self.ff1,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class flowsen_repo_daily(models.Model):
+
+class P_flowsen_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    fr1=models.JSONField(null=True,blank=True)
     fr2=models.JSONField(null=True,blank=True)
-    ff1=models.JSONField(null=True,blank=True)
     ff2=models.JSONField(null=True,blank=True)
-    # avg=models.f(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     month =  models.CharField(max_length=50)
@@ -1138,19 +1170,17 @@ class flowsen_repo_daily(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.fr1,self.fr2,self.ff1,self.created_at,self.updated_at
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr2,self.ff2,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class flowsen_repo_monthly(models.Model):
+
+class F_flowsen_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
     fr1=models.JSONField(null=True,blank=True)
-    fr2=models.JSONField(null=True,blank=True)
     ff1=models.JSONField(null=True,blank=True)
-    ff2=models.JSONField(null=True,blank=True)
-    # avg=models.f(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     month =  models.CharField(max_length=50)
@@ -1158,19 +1188,17 @@ class flowsen_repo_monthly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.fr1,self.fr2,self.ff1,self.created_at,self.updated_at
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr1,self.ff1,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class flowsen_repo_yearly(models.Model):
+
+class P_flowsen_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    fr1=models.JSONField(null=True,blank=True)
     fr2=models.JSONField(null=True,blank=True)
-    ff1=models.JSONField(null=True,blank=True)
     ff2=models.JSONField(null=True,blank=True)
-    # avg=models.f(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True) 
     month =  models.CharField(max_length=50)
@@ -1178,10 +1206,84 @@ class flowsen_repo_yearly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
 
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.fr1,self.fr2,self.ff1,self.created_at,self.updated_at
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr2,self.ff2,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
+
+class F_flowsen_repo_monthly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    fr1=models.JSONField(null=True,blank=True)
+    ff1=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr1,self.ff1,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+class P_flowsen_repo_monthly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    fr2=models.JSONField(null=True,blank=True)
+    ff2=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr2,self.ff2,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+class F_flowsen_repo_yearly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    fr1=models.JSONField(null=True,blank=True)
+    ff1=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr1,self.ff1,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+class P_flowsen_repo_yearly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    fr2=models.JSONField(null=True,blank=True)
+    ff2=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+
+    def _str_(self) -> str:
+        return self.device_id,self.service,self.fr2,self.ff2,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+
 class panel_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
@@ -1796,7 +1898,9 @@ class tap4_repo_yearly(models.Model):
         return self.device_id,self.service,self.p1,self.p2,self.p4,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class consen_repo_hourly(models.Model):
+
+
+class cnd_consen_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -1813,41 +1917,7 @@ class consen_repo_hourly(models.Model):
         return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class consen_repo_daily(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    device_id=models.CharField(max_length=100)
-    service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
-    spn=models.JSONField(null=True,blank=True)
-    asp=models.JSONField(null=True,blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
-    month =  models.CharField(max_length=50)
-    year =  models.CharField(max_length=50)
-    day =  models.CharField(max_length=50)
-    hour =  models.CharField(max_length=50)
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
-    class Meta:
-        app_label = 'devices'
-class consen_repo_monthly(models.Model):
-    id = models.BigAutoField(primary_key=True)
-    device_id=models.CharField(max_length=100)
-    service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
-    spn=models.JSONField(null=True,blank=True)
-    asp=models.JSONField(null=True,blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True) 
-    month =  models.CharField(max_length=50)
-    year =  models.CharField(max_length=50)
-    day =  models.CharField(max_length=50)
-    hour =  models.CharField(max_length=50)
-    def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
-    class Meta:
-        app_label = 'devices'
-class consen_repo_yearly(models.Model):
+class tds_consen_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -1866,6 +1936,111 @@ class consen_repo_yearly(models.Model):
         app_label = 'devices'
 
 
+class cnd_consen_repo_daily(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+class tds_consen_repo_daily(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+class cnd_consen_repo_monthly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+class tds_consen_repo_monthly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+
+
+class cnd_consen_repo_yearly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
+class tds_consen_repo_yearly(models.Model):
+    id = models.BigAutoField(primary_key=True)
+    device_id=models.CharField(max_length=100)
+    service=models.CharField(max_length=100,null=True,blank=True)
+    cnd=models.JSONField(null=True,blank=True)
+    spn=models.JSONField(null=True,blank=True)
+    asp=models.JSONField(null=True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) 
+    month =  models.CharField(max_length=50)
+    year =  models.CharField(max_length=50)
+    day =  models.CharField(max_length=50)
+    hour =  models.CharField(max_length=50)
+    def __str__(self) -> str:
+        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+    class Meta:
+        app_label = 'devices'
 class device_info(models.Model):
     Device_id=models.CharField(max_length=100)
     Device_name=models.CharField(max_length=100)    
@@ -1997,7 +2172,19 @@ class atm_setting(models.Model):
     
     class Meta:
         app_label = 'devices'
-class consen_setting(models.Model):
+class cnd_consen_setting(models.Model):
+    spn=models.CharField(max_length=100)
+    asp=models.CharField(max_length=100)
+    unit_type=models.CharField(max_length=100)
+    company_name=models.CharField(max_length=100)
+    componant_name=models.CharField(max_length=100)
+    device_id=models.CharField(max_length=100)
+    def str(self):
+        return self.spn
+
+    class Meta:
+        app_label = 'devices'
+class tds_consen_setting(models.Model):
     spn=models.CharField(max_length=100)
     asp=models.CharField(max_length=100)
     unit_type=models.CharField(max_length=100)

@@ -44,57 +44,11 @@ class TopicSerializer(serializers.HyperlinkedModelSerializer):
 # 		fields = ('Topic',)
 
 
-# class TopicSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = MyObject
-# 		fields = ('all')
-# class DeviceSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 			model = Decice_details
-# 			fields = ('all')
 
-
-# class NewDeviceSerializer(serializers.HyperlinkedModelSerializer):
-# 	# specify model and fields
-# 	class Meta:
-# 		model = NewDecice_details
-# 		fields = ('all')
 class TopicSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = topics
 		fields=('__all__')
-
-
-
-
-# # Create a model serializer
-# class GeeksSerializer(serializers.HyperlinkedModelSerializer):
-# 	# specify model and fields
-# 	class Meta:
-# 		model = GeeksModel
-# 		fields = ('Topic',)
-
-
-# class TopicSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = MyObject
-# 		fields = ('all')
-# class DeviceSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 			model = Decice_details
-# 			fields = ('all')
-
-
-# class NewDeviceSerializer(serializers.HyperlinkedModelSerializer):
-# 	# specify model and fields
-# 	class Meta:
-# 		model = NewDecice_details
-# 		fields = ('all')
-
-# class All_componentSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = All_components
-# 		fields=('__all__')
 
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -190,25 +144,43 @@ class panel_YearlySerializer(serializers.HyperlinkedModelSerializer):
 		fields='__all__'
 
 
-class flowsen_DailySerializer(serializers.HyperlinkedModelSerializer):
+class F_flowsen_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = flowsen_repo_daily
+		model = F_flowsen_repo_daily
+		fields='__all__'
+class P_flowsen_DailySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = P_flowsen_repo_daily
 		fields='__all__'
 
-class flowsen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+class F_flowsen_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = flowsen_repo_hourly
+		model = F_flowsen_repo_hourly
+		fields='__all__'
+class P_flowsen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = P_flowsen_repo_hourly
 		fields='__all__'
 
-class flowsen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+class F_flowsen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = flowsen_repo_monthly
+		model = F_flowsen_repo_monthly
+		fields='__all__'
+class P_flowsen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = P_flowsen_repo_monthly
 		fields='__all__'
 
-class flowsen_YearlySerializer(serializers.HyperlinkedModelSerializer):
+class F_flowsen_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = flowsen_repo_yearly
+		model = F_flowsen_repo_yearly
 		fields='__all__'
+
+class P_flowsen_YearlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = P_flowsen_repo_yearly
+		fields='__all__'
+
 
 
 class ampv1_DailySerializer(serializers.HyperlinkedModelSerializer):
@@ -384,23 +356,39 @@ class tap4_YearlySerializer(serializers.HyperlinkedModelSerializer):
 		model = tap4_repo_yearly
 		fields='__all__'
 
-class consen_DailySerializer(serializers.HyperlinkedModelSerializer):
+class tds_consen_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = consen_repo_daily
+		model = cnd_consen_repo_daily
 		fields='__all__'
-class consen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_consen_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = consen_repo_hourly
+		model = tds_consen_repo_daily
+		fields='__all__'
+class cnd_consen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = cnd_consen_repo_hourly
+		fields='__all__'
+class tds_consen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = tds_consen_repo_hourly
 		fields='__all__'
 
-class consen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_consen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = consen_repo_monthly
+		model = cnd_consen_repo_monthly
+		fields='__all__'
+class tds_consen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = tds_consen_repo_monthly
 		fields='__all__'
 
-class consen_YearlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_consen_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = consen_repo_yearly
+		model = cnd_consen_repo_yearly
+		fields='__all__'
+class tds_consen_YearlySerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = tds_consen_repo_yearly
 		fields='__all__'
 
 class atm_DailySerializer(serializers.HyperlinkedModelSerializer):
@@ -428,10 +416,6 @@ class GraphSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = graph_info
 		fields='__all__'
-# class YearlySerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = cnd_tds_repo_yearly
-# 		fields=['device_id','service','sum','avg','count']
 
 class DeviceSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
@@ -443,32 +427,7 @@ class KeySerializer(serializers.HyperlinkedModelSerializer):
 		model = key_info
 		fields='__all__'
 
-# class HourlySerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = cnd_tds_repo_hourly
-# 		fields='__all__'
 
-# class MonthlySerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = cnd_tds_repo_monthly
-# 		fields='__all__'
-
-# class DailySerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = cnd_tds_repo_daily
-# 		fields='__all__'
-
-# class GraphSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = graph_info
-# 		fields='__all__'
-
-
-
-class RwpstateSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = Rwp_state
-		fields='__all__'
 class rwpsettingSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = rwp_setting
@@ -488,118 +447,18 @@ class rwpsettingSerializer(serializers.HyperlinkedModelSerializer):
 	rss=Meta()
 	rss.get_author_serializer()
 	rss.get_publisher_serializer()
-class hppstateSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = hpp_state
-		fields='__all__'
-class hppsettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = hpp_setting
-		fields='__all__'
-
-class cndsettingSerializer(serializers.HyperlinkedModelSerializer):
-	# new_field = serializers.CharField()
-	class Meta:
-		model = cnd_setting
-		fields='__all__'
-
-class tdssettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = tds_setting
-		fields='__all__'
-class FflowsensettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = F_flowsen_setting
-		fields='__all__'
-
-class PflowsensettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = P_flowsen_setting
-		fields='__all__'
-class panelsettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = panel_setting
-		fields='__all__'
-class atmsettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = atm_setting
-		fields='__all__'
-# class consensettingSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = consen_setting
-# 		fields='__all__'
-class tap1settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = tap1_setting
-		fields='__all__'
-class tap2settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = tap2_setting
-		fields='__all__'
-class tap3settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = tap3_setting
-		fields='__all__'
-class tap4settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = tap4_setting
-		fields='__all__'
-class ampv1stateSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = ampv1_state
-		fields='__all__'
-class ampv1settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = ampv1_setting
-		fields='__all__'
-class ampv2stateSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = ampv2_state
-		fields='__all__'
-class ampv2settingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = ampv2_setting
-		fields='__all__'
-
-		
 
 class RwpstateSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = Rwp_state
 		fields='__all__'
-class RwpSettingSerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = rwp_setting
-		print("hi am from serilization")
-		fields=['olc','drc','spn','unit_type','company_name','componant_name']
-
-# class RwpSettingGetSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = prwp_setting
-# 		# print("hi am from serilization")
-# 		fields=['componant_name','company_name','unit_type']
-
-# class RwpSettingGetSerializer(serializers.HyperlinkedModelSerializer):
+# class rwpsettingSerializer(serializers.HyperlinkedModelSerializer):
 # 	class Meta:
 # 		model = rwp_setting
 # 		print("hi am from serilization")
-# 		fields='__all__'
-# class flowsen1settingSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = flowsen1_setting
-# 		fields='__all__'
-# class flowsen2settingSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = flowsen2_setting
-# 		fields='__all__'
-# class flowsen3settingSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = flowsen3_setting
-# 		fields='__all__'
-# class flowsen4settingSerializer(serializers.HyperlinkedModelSerializer):
-# 	class Meta:
-# 		model = flowsen4_setting
-# 		fields='__all__'
+# 		fields=['olc','drc','spn','unit_type','company_name','componant_name']
+
+
 class hppstateSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = hpp_state
@@ -636,9 +495,13 @@ class atmsettingSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = atm_setting
 		fields='__all__'
-class consensettingSerializer(serializers.HyperlinkedModelSerializer):
+class cnd_consensettingSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = consen_setting
+		model = cnd_consen_setting
+		fields='__all__'
+class tds_consensettingSerializer(serializers.HyperlinkedModelSerializer):
+	class Meta:
+		model = tds_consen_setting
 		fields='__all__'
 class tap1settingSerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
