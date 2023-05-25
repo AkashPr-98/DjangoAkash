@@ -384,24 +384,24 @@ class tap4_YearlySerializer(serializers.HyperlinkedModelSerializer):
 		model = tap4_repo_yearly
 		fields='__all__'
 
-class consen_DailySerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = consen_repo_daily
-		fields='__all__'
-class consen_HourlySerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = consen_repo_hourly
-		fields='__all__'
+# class consen_DailySerializer(serializers.HyperlinkedModelSerializer):
+# 	class Meta:
+# 		model = consen_repo_daily
+# 		fields='__all__'
+# class consen_HourlySerializer(serializers.HyperlinkedModelSerializer):
+# 	class Meta:
+# 		model = consen_repo_hourly
+# 		fields='__all__'
 
-class consen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = consen_repo_monthly
-		fields='__all__'
+# class consen_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+# 	class Meta:
+# 		model = consen_repo_monthly
+# 		fields='__all__'
 
-class consen_YearlySerializer(serializers.HyperlinkedModelSerializer):
-	class Meta:
-		model = consen_repo_yearly
-		fields='__all__'
+# class consen_YearlySerializer(serializers.HyperlinkedModelSerializer):
+# 	class Meta:
+# 		model = consen_repo_yearly
+# 		fields='__all__'
 
 class atm_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
