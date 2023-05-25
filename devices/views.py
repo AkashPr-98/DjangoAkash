@@ -2849,6 +2849,7 @@ def testo(request):
         p2=0
         p3=0
         p4=0
+        fr=0
 
         for loop_data in array_dat:
             
@@ -2978,6 +2979,9 @@ def testo(request):
                 p3=removed_col[1]
             elif removed_col[0]=='p4':
                 p4=removed_col[1]
+
+            elif removed_col[0]=='fr':
+                fr=removed_col[1]
           
            
            
@@ -2998,7 +3002,7 @@ def testo(request):
         device_id=hmqm_split[1]
         msg_type=hmqm_split[2]
 
-        if(msg_type == 'updset'):
+        if(msg_type == 'updset' or msg_type == 'updsta'):
             print("msg_type",msg_type)
             components=hmqm_split[3]
             
@@ -3010,6 +3014,7 @@ def testo(request):
             
             device_idlist=[]
             tds1={}
+            tds_sen={}
             rwp={}
             hpp={}
             panel={}
@@ -3025,6 +3030,10 @@ def testo(request):
             tap3={}
             tap4={}
             consen={}
+            flowsen1={}
+            flowsen2={}
+            flowsen3={}
+            flowsen4={}
 
             monthset=set()
             
@@ -3033,11 +3042,11 @@ def testo(request):
                 if device_id == s:
                     
                     
-                    tds=did.cnd_tds
+                    tds=did.cnd_sen
                     tds1=tds
                     # tdsstr=(str(tds))
                     
-                    
+                    tds_sen=did.tds_sen
                     rwp=did.rwp
                     
                     hpp=did.hpp
@@ -3066,7 +3075,11 @@ def testo(request):
                     
                     tap4=did.tap4
                     
-                    consen=did.consen
+                    # consen=did.consen
+                    flowsen1=did.flowsen1
+                    flowsen2=did.flowsen2
+                    flowsen3=did.flowsen3
+                    flowsen4=did.flowsen4
                     
                 device_idlist.append(s)
                 
@@ -3082,11 +3095,11 @@ def testo(request):
             hourset=set()
             dd=dateandtime() 
             try:
-                if 'cnd_tds_sen'== components:
+                if 'cnd_sen'== components:
                     if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,cnd_tds=mydata1)
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,cnd_sen=mydata1)
                     else:
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_tds=mydata1)
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_sen=mydata1)
 
                         get_device_id=repo_latestdata.objects.all()
                         for did in get_device_id:
@@ -3094,7 +3107,7 @@ def testo(request):
                             if device_id == s:
                                 
                                 
-                                tds=did.cnd_tds
+                                tds=did.cnd_sen
                                 tds1=tds
                                 # tdsstr=(str(tds))
                                 
@@ -3110,7 +3123,7 @@ def testo(request):
                                 
                         mydata5=olddata.update(mydata1)    
                         
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_tds=olddata)
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_sen=olddata)
                     
                     dd=dateandtime()  
                     
@@ -3412,7 +3425,7 @@ def testo(request):
                 eg = e
                 
                 
-                EchoConsumer.websocket_receive('event','event')
+                # EchoConsumer.websocket_receive('event','event')
                 
                 # raise e
                 # send_exception_message(error_message)
@@ -3423,7 +3436,353 @@ def testo(request):
                         
                 #     })
                 # msgo=e
-                # return e                 
+                # return e  
+
+            try:
+                if 'tds_sen'== components:
+                    if device_id not in device_idlist:
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tds_sen=mydata1)
+                    else:
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tds_sen=mydata1)
+
+                        get_device_id=repo_latestdata.objects.all()
+                        for did in get_device_id:
+                            s=str(did.device_id)
+                            if device_id == s:
+                                
+                                
+                                tds=did.tds_sen
+                                tds1=tds
+                                # tdsstr=(str(tds))
+                                
+                                
+
+                        klist = list(tds1.keys())
+                        
+                        mydatakey = list(mydata1.keys())
+                        
+                        for k,v in tds1.items():
+                            if k not in mydatakey:
+                                olddata.update({k:v})
+                                
+                        mydata5=olddata.update(mydata1)    
+                        
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tds_sen=olddata)
+                    
+                    dd=dateandtime()  
+                    
+                    
+                    ds=treat_tds_sen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,tsp=tsp,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    ds.save()
+                    # Hour
+                    yrdata=treat_tds_sen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_tsp=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_tsp = 0
+                    avgs_asp = 0
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnds=yr.cnd
+                                spns=yr.spn
+                                tsps=yr.tsp
+                                asps=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnds
+                                sums_spn=sums_spn+spns
+                                sums_tsp=sums_tsp+tsps
+                                sums_asp=sums_asp+asps
+                                count=count+1
+                                
+                                
+                                if cnds or spns or tsp or asp == 0:
+                                    zerocount=zerocount+1
+                                    
+                        count1=count-zerocount
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_tsp=sums_tsp/count
+                        avgs_asp=sums_asp/count
+                    hr=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    if hr:
+                        yr_data=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=tds_repo_hourly.objects.create(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                        # if cnds != 0:
+                        #     yr_data=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        # else:
+                        #     yr_data=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count1},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        # if spns != 0:
+                        #     yr_data=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        # else:
+                        #     yr_data=tds_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count1},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    #day   
+                    yrdata=treat_tds_sen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    count=0
+                    count_sum=0
+                    count_cnd=0
+                    count_spn=0
+                    count_tsp=0
+                    count_asp=0
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_tsp=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_tsp = 0
+                    avgs_asp = 0
+                    if yrdata:
+                        for yr in yrdata:
+                            
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                
+                                cnds_d=yr.cnd
+                                spns_d=yr.spn
+                                tsps_d=yr.tsp
+                                asps_d=yr.asp
+                                # sums_d=list(cnds_d.values())[0]
+                                # sums_s=list(spns_d.values())[0]
+                                # sums_t=list(tsps_d.values())[0]
+                                # sums_a=list(asps_d.values())[0]
+                                # # avgs_cnd=list(cnds.values())[1]
+                                # count_cnd=list(cnds_d.values())[2]
+                                # for k,v in cnds.items():
+                                sums_cnd=sums_cnd+cnds_d
+                                sums_spn=sums_spn+spns_d
+                                sums_tsp=sums_tsp+tsps_d
+                                sums_asp=sums_asp+asps_d
+                                count_sum=count_sum+count_cnd
+
+
+                                
+                                # spns=yr.spn[1]
+                                # tsps=yr.tsp[2]
+                                # asps=yr.asp[3]
+                                
+                                # sums_cnd=sums_cnd+cnds
+                                # sums_spn=sums_spn+spns
+                                # sums_tsp=sums_tsp+tsps
+                                # sums_asp=sums_asp+asps
+                                count=count+1
+                                
+                        
+                        
+                        avgs_cnd=sums_cnd/count
+                        
+
+                        avgs_spn=sums_spn/count
+                        
+                        avgs_tsp=sums_tsp/count
+                        avgs_asp=sums_asp/count
+                    hr=tds_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    if hr:
+                        
+                        yr_data=tds_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        
+                    else:
+                        yr_data=tds_repo_daily.objects.create(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        yr_data.save()
+                        
+                    #month
+                    
+                    yrdata=treat_tds_sen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    count=0
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_tsp=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_tsp = 0
+                    avgs_asp = 0
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnds=yr.cnd
+                                spns=yr.spn
+                                tsps=yr.tsp
+                                asps=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnds
+                                sums_spn=sums_spn+spns
+                                sums_tsp=sums_tsp+tsps
+                                sums_asp=sums_asp+asps
+                                count=count+1
+                                
+                                
+                                if cnds or spns or tsp or asp == 0:
+                                    zerocount=zerocount+1
+                        # count1=count-zerocount
+                        # if cnds != 0:
+                        #     avgs_cnd=sums_cnd/count
+                        # else:
+                        #     avgs_cnd=sums_cnd/count1
+                        # if spns != 0:
+                        #     avgs_spn=sums_spn/count
+                        # else:
+                        #     avgs_spn=sums_spn/count1
+                        # if tsps !=0:
+                        #     avgs_tsp=sums_tsp/count
+                        # else:    
+                        #     avgs_tsp=sums_tsp/count1
+                        # if asp !=0:
+                        #     avgs_asp=sums_asp/count
+                        # else:
+                        #     avgs_asp=sums_asp/count1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_tsp=sums_tsp/count
+                        avgs_asp=sums_asp/count
+                    hr=tds_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    if hr:
+                        yr_data=tds_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                    else:
+                        yr_data=tds_repo_monthly.objects.create(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        yr_data.save()
+                
+                    # year
+                    yrdata=treat_tds_sen.objects.filter(year=dd[0],device_id=device_id)
+                    count=0
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_tsp=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_tsp = 0
+                    avgs_asp = 0
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnds=yr.cnd
+                                spns=yr.spn
+                                tsps=yr.tsp
+                                asps=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnds
+                                sums_spn=sums_spn+spns
+                                sums_tsp=sums_tsp+tsps
+                                sums_asp=sums_asp+asps
+                                count=count+1
+                                
+                                
+                                if cnds or spns or tsp or asp == 0:
+                                    zerocount=zerocount+1
+                        # count1=count-zerocount
+                        # if cnds != 0:
+                        #     avgs_cnd=sums_cnd/count
+                        # else:
+                        #     avgs_cnd=sums_cnd/count1
+                        # if spns != 0:
+                        #     avgs_spn=sums_spn/count
+                        # else:
+                        #     avgs_spn=sums_spn/count1
+                        # if tsps !=0:
+                        #     avgs_tsp=sums_tsp/count
+                        # else:    
+                        #     avgs_tsp=sums_tsp/count1
+                        # if asp !=0:
+                        #     avgs_asp=sums_asp/count
+                        # else:
+                        #     avgs_asp=sums_asp/count1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_tsp=sums_tsp/count
+                        avgs_asp=sums_asp/count
+                    hr=tds_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                    if hr:
+                        yr_data=tds_repo_yearly.objects.filter(device_id=device_id).update(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                    else:
+                        yr_data=tds_repo_yearly.objects.create(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        yr_data.save()
+                                
+                    # #month
+                    # yrdata=treat_cnd_tds_sen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    # count=0
+                    # sums=0
+                    # avgs = 0
+                    # if yrdata:
+                    #     for yr in yrdata:
+                    #         yr_d_id=yr.device_id
+                    #         if yr_d_id == device_id:
+                    #             cnds=yr.cnd
+                    
+                    #             sums=sums+cnds
+                    #             count=count+1
+                    
+                    
+                    #     avgs=sums/count
+                    # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    # if hr:
+                    #     yr_data=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
+                    # else:
+                    #     yr_data=repo_monthly.objects.create(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
+                    #     yr_data.save()
+                    
+                    
+                    # day
+                    # yrdata=treat_cnd_tds_sen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    # count=0
+                    # sums=0
+                    # avgs = 0
+                    # if yrdata:
+                    #     for yr in yrdata:
+                    #         yr_d_id=yr.device_id
+                    #         if yr_d_id == device_id:
+                    #             cnds=yr.cnd
+                    
+                    #             sums=sums+cnds
+                    #             count=count+1
+                    
+                    
+                    #     avgs=sums/count
+                    # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    # if hr:
+                    #     yr_data=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
+                    # else:
+                    #     yr_data=repo_daily.objects.create(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
+                    #     yr_data.save()
+                    
+                    # return result
+                    
+            except Exception as e:
+                
+                # error_message = traceback.format_exc()
+            
+            # Send the error message to the WebSocket client
+                # send_error_message_to_websocket(error_message)
+                error_message = e
+
+                # global eg
+                eg = e
+                
+                
+                # EchoConsumer.websocket_receive('event','event')
+                
+                # raise e
+                # send_exception_message(error_message)
+                # EchoCo.send({
+                #         'type': 'websocket.send',
+                #          # 'text': event.get('text')
+                #         'text': str(e),
+                        
+                #     })
+                # msgo=e
+                # return e  
+                           
             try:
                 if 'rwp'==components:
                     if device_id not in device_idlist:
@@ -7456,733 +7815,35 @@ def testo(request):
                 error_message = e
                 # global eg
                 eg = e
-                
-                
-                # EchoConsumer.websocket_receive('event','event')        
-            if 'tap1'==components:
-                    # com=cl
-                    if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap1=mydata1)
-                    else:
-
-                        # repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen=mydata1)
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap1=mydata1)
-
-                        get_device_id=repo_latestdata.objects.all()
-                        for did in get_device_id:
-                            s=str(did.device_id)
-                            if device_id == s:
-                                tap1=did.tap1
-                        klist = list(tap1.keys())
-                        
-                        mydatakey = list(mydata1.keys())
-                        
-                        for k,v in tap1.items():
-                            if k not in mydatakey:
-                                olddata.update({k:v})
-                                
-                        mydata5=olddata.update(mydata1)    
-                        
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap1=olddata)
-
-                    # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap1=mydata1)
-                    # repo_latestobj.save()  
-                    ds=disp_tap1.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                    ds.save()
-                    #hourly
-                    yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    if hr:
-                        yr_data=tap1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap1_repo_hourly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-
-                    #daily
-                    yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    if hr:
-                        yr_data=tap1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap1_repo_daily.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #monthly
-                    yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    if hr:
-                        yr_data=tap1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap1_repo_monthly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #yearly
-                    yrdata=disp_tap1.objects.filter(year=dd[0],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap1_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
-                    if hr:
-                        yr_data=tap1_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap1_repo_yearly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-            if 'tap2'==components:
-                    # com=cl
-                    if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap2=mydata1)
-                    else:
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap2=mydata1)
-
-                        get_device_id=repo_latestdata.objects.all()
-                        for did in get_device_id:
-                            s=str(did.device_id)
-                            if device_id == s:
-                                tap2=did.tap2
-                        klist = list(tap2.keys())
-                        
-                        mydatakey = list(mydata1.keys())
-                        
-                        for k,v in tap2.items():
-                            if k not in mydatakey:
-                                olddata.update({k:v})
-                                
-                        mydata5=olddata.update(mydata1)    
-                        
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap2=olddata)
-
-                    # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap2=mydata1)
-                    # repo_latestobj.save()
-                    ds=disp_tap2.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                    ds.save()
-                    #hourly
-                    yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    if hr:
-                        yr_data=tap2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap2_repo_hourly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-
-                    #daily
-                    yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    if hr:
-                        yr_data=tap2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap2_repo_daily.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #monthly
-                    yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    if hr:
-                        yr_data=tap2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap2_repo_monthly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #yearly
-                    yrdata=disp_tap2.objects.filter(year=dd[0],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap2_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
-                    if hr:
-                        yr_data=tap2_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap2_repo_yearly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-            if 'tap3'==components:
-                    # com=cl
-                    if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap3=mydata1)
-                    else:
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap3=mydata1)
-
-                        get_device_id=repo_latestdata.objects.all()
-                        for did in get_device_id:
-                            s=str(did.device_id)
-                            if device_id == s:
-                                tap3=did.tap3
-                        
-                        klist = list(tap3.keys())
-                        
-                        mydatakey = list(mydata1.keys())
-                        
-                        for k,v in tap3.items():
-                            if k not in mydatakey:
-                                olddata.update({k:v})
-                                
-                        mydata5=olddata.update(mydata1)    
-                        
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap3=olddata)
-
-                    # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap3=mydata1)
-                    # repo_latestobj.save()   
-                    ds=disp_tap3.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                    ds.save()
-                    #hourly
-                    yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    if hr:
-                        yr_data=tap3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap3_repo_hourly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-
-                    #daily
-                    yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    if hr:
-                        yr_data=tap3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap3_repo_daily.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #monthly
-                    yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    if hr:
-                        yr_data=tap3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap3_repo_monthly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #yearly
-                    yrdata=disp_tap3.objects.filter(year=dd[0],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap3_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
-                    if hr:
-                        yr_data=tap3_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap3_repo_yearly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-            if 'tap4'==components:
-                    # com=cl
-                    if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap4=mydata1)
-                    else:
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap4=mydata1)
-
-                        get_device_id=repo_latestdata.objects.all()
-                        for did in get_device_id:
-                            s=str(did.device_id)
-                            if device_id == s:
-                                tap4=did.tap4
-                        klist = list(tap4.keys())
-                        
-                        mydatakey = list(mydata1.keys())
-                        
-                        for k,v in tap4.items():
-                            if k not in mydatakey:
-                                olddata.update({k:v})
-                                
-                        mydata5=olddata.update(mydata1)    
-                        
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap4=olddata)
-
-                    # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap4=mydata1)
-                    # repo_latestobj.save()
-                    ds=disp_tap4.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                    ds.save()
-                    #hourly
-                    yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    if hr:
-                        yr_data=tap4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap4_repo_hourly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-
-                    #daily
-                    yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    if hr:
-                        yr_data=tap4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap4_repo_daily.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #monthly
-                    yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    if hr:
-                        yr_data=tap4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap4_repo_monthly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
-                    #yearly
-                    yrdata=disp_tap4.objects.filter(year=dd[0],device_id=device_id)
-                    count=0
-                    zerocount=-1
-                    sumd={}
-                    sums_p1=0
-                    sums_p2=0
-                    sums_p3=0
-                    sums_p4=0
-                    avgs_p1 = 0
-                    avgs_p2 = 0
-                    avgs_p3 = 0
-                    avgs_p4 = 0
-                    if yrdata:
-                        for yr in yrdata:
-                            yr_d_id=yr.device_id
-                            if yr_d_id == device_id:
-                                p1=yr.p1
-                                p2=yr.p2
-                                p3=yr.p3
-                                p4=yr.p4
-                                sums_p1=sums_p1+p1
-                                sums_p2=sums_p2+p2
-                                sums_p3=sums_p3+p3
-                                sums_p4=sums_p4+p4
-                                count=count+1
-                        avgs_p1=sums_p1/count
-                        avgs_p2=sums_p2/count
-                        avgs_p3=sums_p3/count
-                        avgs_p4=sums_p4/count
-                    hr=tap4_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
-                    if hr:
-                        yr_data=tap4_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    else:
-                        yr_data=tap4_repo_yearly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                        yr_data.save()
             try:
-                if 'consen'==components:
+                if 'cnd_consen'==components:
                     # com=cl
                     if device_id not in device_idlist:
-                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,consen=mydata1)
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,cnd_consen=mydata1)
                     else:
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, consen=mydata1)
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_consen=mydata1)
 
                         get_device_id=repo_latestdata.objects.all()
                         for did in get_device_id:
                             s=str(did.device_id)
                             if device_id == s:
-                                consen=did.consen
-                        klist = list(consen.keys())
+                                cnd_consen=did.cnd_consen
+                        klist = list(cnd_consen.keys())
                         
                         mydatakey = list(mydata1.keys())
                         
-                        for k,v in consen.items():
+                        for k,v in cnd_consen.items():
                             if k not in mydatakey:
                                 olddata.update({k:v})
                                 
                         mydata5=olddata.update(mydata1)    
                         
-                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, consen=olddata)
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, cnd_consen=olddata)
 
-                    ds=disp_consen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    ds=disp_cnd_consen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     ds.save() 
                     #hourly
-                    yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    yrdata=disp_cnd_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                     count=0
                     zerocount=-1
                     sumd={}
@@ -8210,14 +7871,14 @@ def testo(request):
                         avgs_spn=sums_spn/count
                         avgs_asp=sums_asp/count
                 
-                    hr=consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    hr=cnd_consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                     if hr:
-                        yr_data=consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                     else:
-                        yr_data=consen_repo_hourly.objects.create(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_hourly.objects.create(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
                     #daily
-                    yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    yrdata=disp_cnd_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                     count=0
                     zerocount=-1
                     sumd={}
@@ -8245,14 +7906,14 @@ def testo(request):
                         avgs_spn=sums_spn/count
                         avgs_asp=sums_asp/count
                 
-                    hr=consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    hr=cnd_consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
                     if hr:
-                        yr_data=consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                     else:
-                        yr_data=consen_repo_daily.objects.create(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_daily.objects.create(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
                     #monthly
-                    yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    yrdata=disp_cnd_consen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                     count=0
                     zerocount=-1
                     sumd={}
@@ -8280,14 +7941,14 @@ def testo(request):
                         avgs_spn=sums_spn/count
                         avgs_asp=sums_asp/count
                 
-                    hr=consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    hr=cnd_consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                     if hr:
-                        yr_data=consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                     else:
-                        yr_data=consen_repo_monthly.objects.create(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_monthly.objects.create(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
                     #yearly
-                    yrdata=disp_consen.objects.filter(year=dd[0],device_id=device_id)
+                    yrdata=disp_cnd_consen.objects.filter(year=dd[0],device_id=device_id)
                     count=0
                     zerocount=-1
                     sumd={}
@@ -8315,102 +7976,363 @@ def testo(request):
                         avgs_spn=sums_spn/count
                         avgs_asp=sums_asp/count
                 
-                    hr=consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                    hr=cnd_consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
                     if hr:
-                        yr_data=consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                     else:
-                        yr_data=consen_repo_yearly.objects.create(device_id=device_id,service='consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data=cnd_consen_repo_yearly.objects.create(device_id=device_id,service='cnd_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
-                    # yrdata=disp_consen.objects.filter(year=dd[0],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
                     
-                    #             sums=sums+cnds
-                    #             count=count+1
-                    
-                    
-                    #     avgs=sums/count
-                    # hr=repo_yearly.objects.filter(year=dd[0],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_yearly.objects.filter(device_id=device_id).update(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    # else:
-                    #     yr_data=repo_yearly.objects.create(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    #     yr_data.save()
+            except Exception as e:
                 
-                    # # month
-                    # yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
+                error_message = e
+                # global eg
+                eg = e
+                
+                
+                # EchoConsumer.websocket_receive('event','event')
+            try:
+                if 'tds_consen'==components:
+                    # com=cl
+                    if device_id not in device_idlist:
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tds_consen=mydata1)
+                    else:
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tds_consen=mydata1)
+
+                        get_device_id=repo_latestdata.objects.all()
+                        for did in get_device_id:
+                            s=str(did.device_id)
+                            if device_id == s:
+                                tds_consen=did.tds_consen
+                        klist = list(tds_consen.keys())
+                        
+                        mydatakey = list(mydata1.keys())
+                        
+                        for k,v in tds_consen.items():
+                            if k not in mydatakey:
+                                olddata.update({k:v})
+                                
+                        mydata5=olddata.update(mydata1)    
+                        
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tds_consen=olddata)
+
+                    ds=disp_tds_consen.objects.create(device_id=device_id,message_type=msg_type,cnd=cnd,spn=spn,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    ds.save() 
+                    #hourly
+                    yrdata=disp_tds_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_asp = 0
                     
-                    #             sums=sums+cnds
-                    #             count=count+1
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnd=yr.cnd
+                                spn=yr.spn
+                                asp=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnd
+                                sums_spn=sums_spn+spn
+                                sums_asp=sums_asp+asp
+                                
+                                count=count+1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_asp=sums_asp/count
+                
+                    hr=tds_consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    if hr:
+                        yr_data=tds_consen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=tds_consen_repo_hourly.objects.create(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #daily
+                    yrdata=disp_tds_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_asp = 0
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnd=yr.cnd
+                                spn=yr.spn
+                                asp=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnd
+                                sums_spn=sums_spn+spn
+                                sums_asp=sums_asp+asp
+                                
+                                count=count+1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_asp=sums_asp/count
+                
+                    hr=tds_consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    if hr:
+                        yr_data=tds_consen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=tds_consen_repo_daily.objects.create(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #monthly
+                    yrdata=disp_tds_consen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_asp = 0
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnd=yr.cnd
+                                spn=yr.spn
+                                asp=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnd
+                                sums_spn=sums_spn+spn
+                                sums_asp=sums_asp+asp
+                                
+                                count=count+1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_asp=sums_asp/count
+                
+                    hr=tds_consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    if hr:
+                        yr_data=tds_consen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=tds_consen_repo_monthly.objects.create(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #yearly
+                    yrdata=disp_tds_consen.objects.filter(year=dd[0],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_cnd=0
+                    sums_spn=0
+                    sums_asp=0
+                    avgs_cnd = 0
+                    avgs_spn = 0
+                    avgs_asp = 0
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                cnd=yr.cnd
+                                spn=yr.spn
+                                asp=yr.asp
+                                
+                                sums_cnd=sums_cnd+cnd
+                                sums_spn=sums_spn+spn
+                                sums_asp=sums_asp+asp
+                                
+                                count=count+1
+                        avgs_cnd=sums_cnd/count
+                        avgs_spn=sums_spn/count
+                        avgs_asp=sums_asp/count
+                
+                    hr=tds_consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                    if hr:
+                        yr_data=tds_consen_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=tds_consen_repo_yearly.objects.create(device_id=device_id,service='tds_consen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    
+            except Exception as e:
+                
+                error_message = e
+                # global eg
+                eg = e
+                
+                
+                # EchoConsumer.websocket_receive('event','event')
+            try:
+                if 'F_flowsen'==components:
+                    # com=cl
+                    if device_id not in device_idlist:
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,F_flowsen=mydata1)
+                    else:
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, F_flowsen=mydata1)
+
+                        get_device_id=repo_latestdata.objects.all()
+                        for did in get_device_id:
+                            s=str(did.device_id)
+                            if device_id == s:
+                                F_flowsen=did.F_flowsen
+                        klist = list(F_flowsen.keys())
+                        
+                        mydatakey = list(mydata1.keys())
+                        
+                        for k,v in F_flowsen.items():
+                            if k not in mydatakey:
+                                olddata.update({k:v})
+                                
+                        mydata5=olddata.update(mydata1)    
+                        
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, F_flowsen=olddata)
+
+                    ds=treat_F_flowsen.objects.create(device_id=device_id,message_type=msg_type,fr1=fr1,ff1=ff1,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    ds.save() 
+                    #hourly
+                    yrdata=treat_F_flowsen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr1=0
+                    sums_ff1=0
+                    avgs_fr1 = 0
+                    avgs_ff1 = 0
                     
                     
-                    #     avgs=sums/count
-                    # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    # else:
-                    #     yr_data=repo_monthly.objects.create(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    #     yr_data.save()
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr1=yr.fr1
+                                ff1=yr.ff1
+                                
+                                sums_fr1=sums_fr1+fr1
+                                sums_ff1=sums_ff1+ff1
+                                
+                                
+                                count=count+1
+                        avgs_fr1=sums_fr1/count
+                        avgs_ff1=sums_ff1/count
+                        
+                
+                    hr=F_flowsen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    if hr:
+                        yr_data=F_flowsen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=F_flowsen_repo_hourly.objects.create(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #daily
+                    yrdata=treat_F_flowsen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr1=0
+                    sums_ff1=0
                     
-                    # # day
-                    # yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
-                    
-                    #             sums=sums+cnds
-                    #             count=count+1
-                    
-                    
-                    #     avgs=sums/count
-                    # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
-                    # else:
-                    #     yr_data=repo_daily.objects.create(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
-                    #     yr_data.save()
-                    
-                    # # hour
-                    # yrdata=disp_consen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
-                    
-                    #             sums=sums+cnds
-                    #             count=count+1
+                    avgs_fr1 = 0
+                    avgs_ff1 = 0
                     
                     
-                    #     avgs=sums/count
-                    # hr=repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    # else:
-                    #     yr_data=repo_hourly.objects.create(device_id=device_id,service='consen_cnd',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
-                    #     yr_data.save()
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr1=yr.fr1
+                                ff1=yr.ff1
+                                
+                                
+                                sums_fr1=sums_fr1+fr1
+                                sums_ff1=sums_ff1+ff1
+                                
+                                
+                                count=count+1
+                        avgs_fr1=sums_fr1/count
+                        avgs_ff1=sums_ff1/count
+                        
+                
+                    hr=F_flowsen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    if hr:
+                        yr_data=F_flowsen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=F_flowsen_repo_daily.objects.create(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #monthly
+                    yrdata=treat_F_flowsen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr1=0
+                    sums_ff1=0
+                    
+                    avgs_fr1 = 0
+                    avgs_ff1 = 0
+                    
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr1=yr.fr1
+                                ff1=yr.ff1
+                                
+                                
+                                sums_fr1=sums_fr1+fr1
+                                sums_ff1=sums_ff1+ff1
+                                
+                                
+                                count=count+1
+                        avgs_fr1=sums_fr1/count
+                        avgs_ff1=sums_ff1/count
+                        
+                
+                    hr=F_flowsen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    if hr:
+                        yr_data=F_flowsen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=F_flowsen_repo_monthly.objects.create(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #yearly
+                    yrdata=treat_F_flowsen.objects.filter(year=dd[0],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr1=0
+                    sums_ff1=0
+                    
+                    avgs_fr1 = 0
+                    avgs_ff1 = 0
+                    
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr1=yr.fr1
+                                ff1=yr.ff1
+                                
+                                
+                                sums_fr1=sums_fr1+fr1
+                                sums_ff1=sums_ff1+ff1
+                                
+                                
+                                count=count+1
+                        avgs_fr1=sums_fr1/count
+                        avgs_ff1=sums_ff1/count
+                        
+                
+                    hr=F_flowsen_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                    if hr:
+                        yr_data=F_flowsen_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=F_flowsen_repo_yearly.objects.create(device_id=device_id,service='F_flowsen',fr1={'sum':sums_fr1,'avg':avgs_fr1,'count':count},ff1={'sum':sums_ff1,'avg':avgs_ff1,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    
             except Exception as e:
                 
                 error_message = e
@@ -8420,70 +8342,1442 @@ def testo(request):
                 
                 # EchoConsumer.websocket_receive('event','event') 
 
+            try:
+                if 'P_flowsen'==components:
+                    # com=cl
+                    if device_id not in device_idlist:
+                        repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,P_flowsen=mydata1)
+                    else:
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, P_flowsen=mydata1)
 
-        # class EchoConsumer(SyncConsumer):
-        #     def websocket_connect(self, event):
-            
-        
+                        get_device_id=repo_latestdata.objects.all()
+                        for did in get_device_id:
+                            s=str(did.device_id)
+                            if device_id == s:
+                                P_flowsen=did.P_flowsen
+                        klist = list(P_flowsen.keys())
+                        
+                        mydatakey = list(mydata1.keys())
+                        
+                        for k,v in P_flowsen.items():
+                            if k not in mydatakey:
+                                olddata.update({k:v})
+                                
+                        mydata5=olddata.update(mydata1)    
+                        
+                        repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, P_flowsen=olddata)
 
-        #         self.send({
-        #             'type': 'websocket.accept'
-        #         })
-
-        #     def websocket_receive(self, event):
-            
-        
-        #         # msg=input("Enter message: ")
-        #         # if msgo:
-        #         try:
-        #             # Call another function that may raise an exception
-        #             result = on_message()
-        #             # Process the result
+                    ds=treat_P_flowsen.objects.create(device_id=device_id,message_type=msg_type,fr2=fr2,ff2=ff2,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    ds.save() 
+                    #hourly
+                    yrdata=treat_P_flowsen.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr2=0
+                    sums_ff2=0
+                    avgs_fr2 = 0
+                    avgs_ff2 = 0
                     
-        #         except Exception as e:
-        
-        #         try:
-        #             # Simulate an exception
-        #             1 / 0
-        #         except Exception as e:
-        #                 # Send the exception message to the WebSocket client
-        #                 self.send({
-        #                     'type': 'websocket.send',
-        #                     # 'text': event.get('text')
-        #                     'text': str(e),
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr2=yr.fr2
+                                ff2=yr.ff2
+                                
+                                sums_fr2=sums_fr2+fr2
+                                sums_ff2=sums_ff2+ff2
+                                
+                                
+                                count=count+1
+                        avgs_fr2=sums_fr2/count
+                        avgs_ff2=sums_ff2/count
+                        
+                
+                    hr=P_flowsen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                    if hr:
+                        yr_data=P_flowsen_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=P_flowsen_repo_hourly.objects.create(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #daily
+                    yrdata=treat_P_flowsen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr2=0
+                    sums_ff2=0
+                    
+                    avgs_fr2 = 0
+                    avgs_ff2 = 0
+                    
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr2=yr.fr2
+                                ff2=yr.ff2
+                                
+                                
+                                sums_fr2=sums_fr2+fr2
+                                sums_ff2=sums_ff2+ff2
+                                
+                                
+                                count=count+1
+                        avgs_fr2=sums_fr2/count
+                        avgs_ff2=sums_ff2/count
+                        
+                
+                    hr=P_flowsen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                    if hr:
+                        yr_data=P_flowsen_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=P_flowsen_repo_daily.objects.create(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #monthly
+                    yrdata=treat_P_flowsen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr2=0
+                    sums_ff2=0
+                    
+                    avgs_fr2 = 0
+                    avgs_ff2 = 0
+                    
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr2=yr.fr2
+                                ff2=yr.ff2
+                                
+                                
+                                sums_fr2=sums_fr2+fr2
+                                sums_ff2=sums_ff2+ff2
+                                
+                                
+                                count=count+1
+                        avgs_fr2=sums_fr2/count
+                        avgs_ff2=sums_ff2/count
+                        
+                
+                    hr=P_flowsen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                    if hr:
+                        yr_data=P_flowsen_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=P_flowsen_repo_monthly.objects.create(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    #yearly
+                    yrdata=treat_P_flowsen.objects.filter(year=dd[0],device_id=device_id)
+                    count=0
+                    zerocount=-1
+                    sumd={}
+                    sums_fr2=0
+                    sums_ff2=0
+                    
+                    avgs_fr2 = 0
+                    avgs_ff2 = 0
+                    
+                    
+                    if yrdata:
+                        for yr in yrdata:
+                            yr_d_id=yr.device_id
+                            if yr_d_id == device_id:
+                                fr2=yr.fr2
+                                ff2=yr.ff2
+                                
+                                
+                                sums_fr2=sums_fr2+fr2
+                                sums_ff2=sums_ff2+ff2
+                                
+                                
+                                count=count+1
+                        avgs_fr2=sums_fr2/count
+                        avgs_ff2=sums_ff2/count
+                        
+                
+                    hr=P_flowsen_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                    if hr:
+                        yr_data=P_flowsen_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                    else:
+                        yr_data=P_flowsen_repo_yearly.objects.create(device_id=device_id,service='P_flowsen',fr2={'sum':sums_fr2,'avg':avgs_fr2,'count':count},ff2={'sum':sums_ff2,'avg':avgs_ff2,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        yr_data.save()
+                    
+            except Exception as e:
+                
+                error_message = e
+                # global eg
+                eg = e
+                
+                
+                # EchoConsumer.websocket_receive('event','event')    
+                
+                    # EchoConsumer.websocket_receive('event','event') 
+            try:
+
+                if 'tap1'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap1=mydata1)
+                        else:
+
+                            # repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen=mydata1)
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap1=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    tap1=did.tap1
+                            klist = list(tap1.keys())
                             
-        #                 })
-        #         # self.send({
-        #         #     'type': 'websocket.send',
-        #         #     # 'text': event.get('text')
-        #         #     'text': msg
-        #         # })
-        #         self.websocket_receive(event)
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in tap1.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap1=olddata)
 
-        # #    async def websocket_disconnect(self, event):
-        
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap1=mydata1)
+                        # repo_latestobj.save()  
+                        ds=disp_tap1.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=tap1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap1_repo_hourly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
 
-        #     def disconnect(self, close_code):
-        # # Leave room group
-        #         async_to_sync(self.channel_layer.group_discard)(
-        #             self.room_group_name,
-        #             self.channel_name
-        #         )
-        #         raise StopConsumer()
+                        #daily
+                        yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=tap1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap1_repo_daily.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_tap1.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=tap1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap1_repo_monthly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_tap1.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap1_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=tap1_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap1_repo_yearly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+                
+                
+                # EchoConsumer.websocket_receive('event','event')  
+            try:
+                if 'tap2'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap2=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap2=mydata1)
 
-        # from channels.layers import get_channel_layer
-        # from asgiref.sync import async_to_sync
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    tap2=did.tap2
+                            klist = list(tap2.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in tap2.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap2=olddata)
 
-        # def my_view(request):
-        #     channel_layer = get_channel_layer()
-        #     async_to_sync(channel_layer.group_send)(
-        #         'exceptions',  # Group name
-        #         {
-        #             'type': 'send.exception',
-        #             'exception': 'This is an exception message.',
-        #         }
-        #     )
-    # Rest of your view logic
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap2=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_tap2.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=tap2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap2_repo_hourly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=tap2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap2_repo_daily.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_tap2.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=tap2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap2_repo_monthly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_tap2.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap2_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=tap2_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap2_repo_yearly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+            try:
+
+                if 'tap3'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap3=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap3=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    tap3=did.tap3
+                            
+                            klist = list(tap3.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in tap3.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap3=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap3=mydata1)
+                        # repo_latestobj.save()   
+                        ds=disp_tap3.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=tap3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap3_repo_hourly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=tap3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap3_repo_daily.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_tap3.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=tap3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap3_repo_monthly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_tap3.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap3_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=tap3_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap3_repo_yearly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+
+            try:
+
+                if 'tap4'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tap4=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap4=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    tap4=did.tap4
+                            klist = list(tap4.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in tap4.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tap4=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,tap4=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_tap4.objects.create(device_id=device_id,message_type=msg_type,p1=p1,p2=p2,p3=p3,p4=p4,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=tap4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap4_repo_hourly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=tap4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap4_repo_daily.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_tap4.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=tap4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap4_repo_monthly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_tap4.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_p1=0
+                        sums_p2=0
+                        sums_p3=0
+                        sums_p4=0
+                        avgs_p1 = 0
+                        avgs_p2 = 0
+                        avgs_p3 = 0
+                        avgs_p4 = 0
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    p1=yr.p1
+                                    p2=yr.p2
+                                    p3=yr.p3
+                                    p4=yr.p4
+                                    sums_p1=sums_p1+p1
+                                    sums_p2=sums_p2+p2
+                                    sums_p3=sums_p3+p3
+                                    sums_p4=sums_p4+p4
+                                    count=count+1
+                            avgs_p1=sums_p1/count
+                            avgs_p2=sums_p2/count
+                            avgs_p3=sums_p3/count
+                            avgs_p4=sums_p4/count
+                        hr=tap4_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=tap4_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=tap4_repo_yearly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+
+            try:
+
+                if 'flowsen1'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,flowsen1=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen1=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    flowsen1=did.flowsen1
+                            klist = list(flowsen1.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in flowsen1.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen1=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,flowsen1=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_flowsen1.objects.create(device_id=device_id,message_type=msg_type,fr=fr,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_flowsen1.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        avgs_fr = 0
+                       
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen1_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen1_repo_hourly.objects.create(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_flowsen1.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen1_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen1_repo_daily.objects.create(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_flowsen1.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen1_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen1_repo_monthly.objects.create(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_flowsen1.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen1_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen1_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen1_repo_yearly.objects.create(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+            try:
+
+                if 'flowsen2'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,flowsen2=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen2=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    flowsen2=did.flowsen2
+                            klist = list(flowsen2.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in flowsen2.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen2=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,flowsen2=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_flowsen2.objects.create(device_id=device_id,message_type=msg_type,fr=fr,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_flowsen2.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        avgs_fr = 0
+                       
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen2_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen2_repo_hourly.objects.create(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_flowsen2.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen2_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen2_repo_daily.objects.create(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_flowsen2.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen2_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen2_repo_monthly.objects.create(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_flowsen2.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen2_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen2_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen2_repo_yearly.objects.create(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+            try:
+
+                if 'flowsen3'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,flowsen3=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen3=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    flowsen3=did.flowsen3
+                            klist = list(flowsen3.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in flowsen3.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen3=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,flowsen3=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_flowsen3.objects.create(device_id=device_id,message_type=msg_type,fr=fr,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_flowsen3.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        avgs_fr = 0
+                       
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen3_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen3_repo_hourly.objects.create(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_flowsen3.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen3_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen3_repo_daily.objects.create(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_flowsen3.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen3_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen3_repo_monthly.objects.create(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_flowsen3.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen3_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen3_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen3_repo_yearly.objects.create(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+            try:
+
+                if 'flowsen4'==components:
+                        # com=cl
+                        if device_id not in device_idlist:
+                            repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,flowsen4=mydata1)
+                        else:
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen4=mydata1)
+
+                            get_device_id=repo_latestdata.objects.all()
+                            for did in get_device_id:
+                                s=str(did.device_id)
+                                if device_id == s:
+                                    flowsen4=did.flowsen4
+                            klist = list(flowsen4.keys())
+                            
+                            mydatakey = list(mydata1.keys())
+                            
+                            for k,v in flowsen4.items():
+                                if k not in mydatakey:
+                                    olddata.update({k:v})
+                                    
+                            mydata5=olddata.update(mydata1)    
+                            
+                            repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, flowsen4=olddata)
+
+                        # repo_latestobj=repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id,message_type=msg_type,flowsen4=mydata1)
+                        # repo_latestobj.save()
+                        ds=disp_flowsen4.objects.create(device_id=device_id,message_type=msg_type,fr=fr,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                        ds.save()
+                        #hourly
+                        yrdata=disp_flowsen4.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        avgs_fr = 0
+                       
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen4_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen4_repo_hourly.objects.create(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+
+                        #daily
+                        yrdata=disp_flowsen4.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen4_repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen4_repo_daily.objects.create(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #monthly
+                        yrdata=disp_flowsen4.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen4_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen4_repo_monthly.objects.create(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+                        #yearly
+                        yrdata=disp_flowsen4.objects.filter(year=dd[0],device_id=device_id)
+                        count=0
+                        zerocount=-1
+                        sumd={}
+                        sums_fr=0
+                        
+                        avgs_fr = 0
+                        
+                        if yrdata:
+                            for yr in yrdata:
+                                yr_d_id=yr.device_id
+                                if yr_d_id == device_id:
+                                    fr=yr.fr
+                                    sums_fr=sums_fr+fr
+                                    
+                                    count=count+1
+                            avgs_fr=sums_fr/count
+                            
+                        hr=disp_flowsen4_repo_yearly.objects.filter(year=dd[0],device_id=device_id)
+                        if hr:
+                            yr_data=disp_flowsen4_repo_yearly.objects.filter(year=dd[0],device_id=device_id).update(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                        else:
+                            yr_data=disp_flowsen4_repo_yearly.objects.create(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
+                            yr_data.save()
+            except Exception as e:
+                error_message = e
+                # global eg
+                eg = e
+
 
 
     mqtt_client.on_connect = on_connect
