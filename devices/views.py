@@ -143,107 +143,6 @@ from django.core.serializers import serialize
     #     raise StopConsumer()
 
 
-# from channels.generic.websocket import AsyncWebsocketConsumer
-
-# class MyConsumer(AsyncWebsocketConsumer):
-#     async def connect(self):
-#         await self.accept()
-
-#     async def disconnect(self, close_code):
-#         pass
-
-#     async def receive(self, text_data):
-#         await self.send(text_data="You said: " + text_data)
-# from waterinn import mqttconn.mqttconn
-# from mqttconn.mqtt import client as mqtt_client
-# from mqttconn import mqtt
-# Create your views here.
-# from pymongo import MongoClient
-# # connection_string = mongodb+srv://<username>:<password>@<atlas cluster>
-# # /<myFirstDatabase>?retryWrites=true&w=majority
-# client = pymongo.MongoClient('connection_string')
-# db = client['db_name']
-
-
-# makemyrx_db = client['sample_medicines']
-# #collection object
-# medicines_collection = makemyrx_db['medicinedetails']
-# send=str()
-#**************************************************************************
-# msgo=0
-
-##############################
-# async def echo_consumer(websocket,receive, send):
-#     await websocket.accept()
-    
-#     while True:
-#         receive_data = await websocket.receive_text()
-
-        
-#         # Process the received data or perform any other actions
-        
-#         # Example: Sending a response back to the client
-#         response = f"You sent: {receive_data}"
-#         await websocket.send_text(response)
-###########################
-# from channels.consumer import SyncConsumer
-# class EchoConsumer(SyncConsumer):
-#     def websocket_connect(self, event):
-       
-        
-
-#         self.send({
-#             'type': 'websocket.accept'
-#         })
-#     def websocket_receive(self, event):
-       
-        
-#         # msg=input("Enter message: ")
-        
-#                 # Send the exception message to the WebSocket client
-#         if eg:
-#            self.send({
-#                 'type': 'websocket.send',
-#                 # 'text': event.get('text')
-#                 'text':str(eg),
-                
-#             })
-       
-    
-        
-        
-
-#     def websocket_disconnect(self, event):
-        
-
-#     async def disconnect(self, close_code):
-#  # Leave room group
-#         async_to_sync(self.channel_layer.group_discard)(
-#             self.room_group_name,
-#             self.channel_name
-#         )
-#         raise StopConsumer()
-    # ****************************************************************************  
-# from channels.generic.websocket import AsyncWebsocketConsumer
-
-# # class EchoConsumer(AsyncWebsocketConsumer):
-# class MyConsumer(AsyncWebsocketConsumer):
-#     async def websocket_connect(self, event):
-
-#         await self.accept()
-
-#     async def websocket_receive(self, event):
-
-
-#         # Process received message or perform any necessary actions
-#         # eg = ...
-
-#         if eg:
-#             await self.send(text_data=str(eg))
-
-#     async def disconnect(self, close_code):
-#         # Perform any necessary cleanup or disconnection handling
-#         pass
  
 def dateandtime():
     year=datetime.today().strftime('%Y')
@@ -1751,32 +1650,7 @@ class keyViewset(viewsets.ModelViewSet):
 
 	# specify serializer to be used
 	serializer_class = KeySerializer
-# class All_componentViewset(viewsets.ModelViewSet):
-# 	# define queryset
-# 	queryset = All_components.objects.all()
-
-# 	# specify serializer to be used
-# 	serializer_class = All_componentSerializer      
-# class HourlyViewset(viewsets.ModelViewSet):
-# 	# define queryset
-# 	queryset = cnd_tds_repo_hourly.objects.all()
-
-# 	# specify serializer to be used
-# 	serializer_class = HourlySerializer
         
-# class MonthlyViewset(viewsets.ModelViewSet):
-# 	# define queryset
-# 	queryset = cnd_tds_repo_monthly.objects.all()
-
-# 	# specify serializer to be used
-# 	serializer_class = MonthlySerializer
-        
-# class DailyViewset(viewsets.ModelViewSet):
-# 	# define queryset
-# 	queryset = cnd_tds_repo_daily.objects.all()
-
-# 	# specify serializer to be used
-# 	serializer_class = DailySerializer
         
 class GraphViewset(viewsets.ModelViewSet):
 	# define queryset
@@ -3364,60 +3238,12 @@ def testo(request):
                     else:
                         yr_data=cnd_tds_repo_yearly.objects.create(device_id=device_id,service='cnd_tds_sen',cnd={'sum':sums_cnd,'avg':avgs_cnd,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},tsp={'sum':sums_tsp,'avg':avgs_tsp,'count':count},asp={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
-                                
-                    # #month
-                    # yrdata=treat_cnd_tds_sen.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
-                    
-                    #             sums=sums+cnds
-                    #             count=count+1
-                    
-                    
-                    #     avgs=sums/count
-                    # hr=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    # else:
-                    #     yr_data=repo_monthly.objects.create(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0])
-                    #     yr_data.save()
-                    
-                    
-                    # day
-                    # yrdata=treat_cnd_tds_sen.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    # count=0
-                    # sums=0
-                    # avgs = 0
-                    # if yrdata:
-                    #     for yr in yrdata:
-                    #         yr_d_id=yr.device_id
-                    #         if yr_d_id == device_id:
-                    #             cnds=yr.cnd
-                    
-                    #             sums=sums+cnds
-                    #             count=count+1
-                    
-                    
-                    #     avgs=sums/count
-                    # hr=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id)
-                    # if hr:
-                    #     yr_data=repo_daily.objects.filter(year=dd[0],month=dd[1],day=dd[2],device_id=device_id).update(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
-                    # else:
-                    #     yr_data=repo_daily.objects.create(device_id=device_id,service='cnd_tds_cnd',sum=sums,count=count,avg=avgs,month=dd[1],year=dd[0],day=dd[2])
-                    #     yr_data.save()
-                    
-                    # return result
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 # error_message = traceback.format_exc()
-            
+                print("error is:",e)
             # Send the error message to the WebSocket client
                 # send_error_message_to_websocket(error_message)
                 error_message = e
@@ -3759,7 +3585,8 @@ def testo(request):
                     # return result
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 # error_message = traceback.format_exc()
             
             # Send the error message to the WebSocket client
@@ -4183,7 +4010,8 @@ def testo(request):
                     
             
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='rwp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -4565,7 +4393,8 @@ def testo(request):
                     # else:
                     #     yr_data=repo_hourly.objects.filter(device_id=device_id).update(device_id=device_id,service='hpp_crt',sum=sums,count=count,avg=avgs)
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='hpp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -5191,7 +5020,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='flowsen_fr2',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='panel',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -5585,7 +5415,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv1_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -5985,7 +5816,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv2_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -6383,7 +6215,8 @@ def testo(request):
                     #     yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv3_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                     #     yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -6783,7 +6616,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv4_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -7183,7 +7017,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='ampv5_cct',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv5',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -7811,7 +7646,8 @@ def testo(request):
                 #         yr_data=repo_hourly.objects.create(device_id=device_id,service='atm_tmp',sum=sums,count=count,avg=avgs,hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                 #         yr_data.save()
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='atm',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -7984,7 +7820,8 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_consen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -8160,7 +7997,8 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_consen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -8334,7 +8172,8 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='F_flowsen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -8509,7 +8348,8 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='P_flowsen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -8696,6 +8536,8 @@ def testo(request):
                             yr_data=tap1_repo_yearly.objects.create(device_id=device_id,service='tap1',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -8877,6 +8719,8 @@ def testo(request):
                             yr_data=tap2_repo_yearly.objects.create(device_id=device_id,service='tap2',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9057,6 +8901,8 @@ def testo(request):
                             yr_data=tap3_repo_yearly.objects.create(device_id=device_id,service='tap3',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9237,6 +9083,8 @@ def testo(request):
                             yr_data=tap4_repo_yearly.objects.create(device_id=device_id,service='tap4',p1={'sum':sums_p1,'avg':avgs_p1,'count':count},p2={'sum':sums_p2,'avg':avgs_p2,'count':count},p3={'sum':sums_p3,'avg':avgs_p3,'count':count},p4={'sum':sums_p4,'avg':avgs_p4,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9372,6 +9220,8 @@ def testo(request):
                             yr_data=disp_flowsen1_repo_yearly.objects.create(device_id=device_id,service='flowsen1',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9506,6 +9356,8 @@ def testo(request):
                             yr_data=disp_flowsen2_repo_yearly.objects.create(device_id=device_id,service='flowsen2',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9640,6 +9492,8 @@ def testo(request):
                             yr_data=disp_flowsen3_repo_yearly.objects.create(device_id=device_id,service='flowsen3',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -9774,6 +9628,8 @@ def testo(request):
                             yr_data=disp_flowsen4_repo_yearly.objects.create(device_id=device_id,service='flowsen4',fr={'sum':sums_fr,'avg':avgs_fr,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                             yr_data.save()
             except Exception as e:
+                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                erro.save()
                 error_message = e
                 # global eg
                 eg = e
