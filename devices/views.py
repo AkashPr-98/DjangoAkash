@@ -378,6 +378,7 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
                 cmpname = x.componant_name
             
             qs_sta = treat_cnd_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            #new code
             qs_set = treat_cnd_tds_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
@@ -386,7 +387,7 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
             print("Data_sta is:",data_sta)
             for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
+            #new code
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
             print("data_set is:",data_set)
@@ -406,11 +407,13 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
                 data_sta = json.dumps(data_sta[0]["fields"])
                 data_sta = json.loads(data_sta)
 
+                #new code
                 data_set = json.dumps(data_set[0]["fields"])
                 data_set = json.loads(data_set)
-
+                #new code
                 data_final = [data_sta,data_set]
                 response_data = {
+                     #new code
                     'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data get successful", # Add the message field
