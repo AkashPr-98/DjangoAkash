@@ -377,13 +377,13 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_cnd_tds_sen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_cnd_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            print("Data is:",data)
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
             ero=Errors.objects.filter(service='cnd_sen')
             # err='AAA'
@@ -391,7 +391,7 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
             # for err in ero:
             # err=ero.e_discriptions
             # print("errorsss is:",err)
-            if not data:
+            if not data_sta:
                 response_data = {
 
                     'data': [],  # Include the 'data' field
@@ -399,11 +399,11 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+                data_sta = [data_sta]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                    'data': data_sta[0],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data get successful", # Add the message field
                     # 'error':err,
