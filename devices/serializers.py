@@ -60,24 +60,24 @@ class KeySerializer(serializers.HyperlinkedModelSerializer):
 		model = key_info
 		fields='__all__'
 
-class cnd_tds_YearlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = cnd_tds_repo_yearly
+		model = cnd_repo_yearly
 		fields='__all__'
 
-class cnd_tds_HourlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = cnd_tds_repo_hourly
+		model = cnd_repo_hourly
 		fields='__all__'
 
-class cnd_tds_MonthlySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = cnd_tds_repo_monthly
+		model = cnd_repo_monthly
 		fields='__all__'
 
-class cnd_tds_DailySerializer(serializers.HyperlinkedModelSerializer):
+class cnd_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
-		model = cnd_tds_repo_daily
+		model = cnd_repo_daily
 		fields='__all__'
 
 class tds_YearlySerializer(serializers.HyperlinkedModelSerializer):
