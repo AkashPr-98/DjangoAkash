@@ -4995,21 +4995,18 @@ def testo(request):
                                 srto=yr.srt
                                 bkto=yr.bkt
                                 rsto=yr.rst
-                                print("**")
+                                
                                 sums_ipv=sums_ipv+ipvo
-                                print("***")
-                                print("***")
                                 sums_unv=sums_unv+unvo
                                 sums_ovv=sums_ovv+ovvo
                                 sums_spn=sums_spn+spno
-                                print("***5")
                                 sums_nmv=sums_nmv+nmvo
                                 sums_srt=sums_srt+int(srto)
                                 sums_bkt=sums_bkt+bkto
-                                print("***7")
+                                
                                 sums_rst=sums_rst+rsto
                                 count=count+1
-                                print("KKKK")
+                                
                         avgs_ipv=sums_ipv/count
                         
                         avgs_unv=sums_unv/count
@@ -5020,7 +5017,7 @@ def testo(request):
                         avgs_srt=sums_srt/count
                         avgs_bkt=sums_bkt/count
                         avgs_rst=sums_rst/count
-                        print("LLLLL")
+                        
                     hr=panel_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id)
                     if hr:
                         yr_data=panel_repo_hourly.objects.filter(year=dd[0],month=dd[1],day=dd[2],hour=dd[3],device_id=device_id).update(device_id=device_id,service='panel',ipv={'sum':sums_ipv,'avg':avgs_ipv,'count':count},unv={'sum':sums_unv,'avg':avgs_unv,'count':count},ovv={'sum':sums_ovv,'avg':avgs_ovv,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},nmv={'sum':sums_nmv,'avg':avgs_nmv,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
