@@ -326,31 +326,46 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
             for x in dinfo:
                 did = x.Device_id
                 cmpname = x.componant_name
-            
-            qs = treat_rwp.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_rwp.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_rwp.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            ero=Errors.objects.filter(service='rwp')
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -358,11 +373,10 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
-
+            
 class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
 	# define queryset
         
@@ -441,31 +455,45 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
             for x in dinfo:
                 did = x.Device_id
                 cmpname = x.componant_name
-            
-            qs = treat_tds_sen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_tds_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -473,8 +501,8 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 class updated_treat_hppViewset(viewsets.ModelViewSet):
@@ -491,30 +519,45 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_hpp.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_hpp.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_hpp.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -522,10 +565,9 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
 	# define queryset
@@ -540,30 +582,45 @@ class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_ampv1.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_ampv1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_ampv1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -571,11 +628,9 @@ class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
-
 class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
 	# define queryset
     def dispatch(self, request, *args, **kwargs):
@@ -589,30 +644,45 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_ampv2.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_ampv2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_ampv2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -620,10 +690,9 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
     
 
 class updated_treat_panelViewset(viewsets.ModelViewSet):
@@ -639,30 +708,45 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_panel.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_panel.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_panel.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -670,10 +754,9 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class updated_disp_atmViewset(viewsets.ModelViewSet):
 	# define queryset
@@ -688,30 +771,46 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_atm.objects.filter(device_id=did).order_by('-id')[:1:1]
+            
+            qs_sta = disp_atm.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_atm.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -719,10 +818,9 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class getDeviceID(viewsets.ModelViewSet):
 	# define queryset
@@ -784,30 +882,45 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_tap1.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_tap1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_tap1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -815,10 +928,9 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class updated_disp_tap2Viewset(viewsets.ModelViewSet):
 	# define queryset
@@ -832,31 +944,46 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
             for x in dinfo:
                 did = x.Device_id
                 cmpname = x.componant_name
-            
-            qs = disp_tap2.objects.filter(device_id=did).order_by('-id')[:1:1]
+
+            qs_sta = disp_tap2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_tap2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -864,11 +991,11 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
-
+           
 class updated_disp_tap3Viewset(viewsets.ModelViewSet):
 	# define queryset
     def dispatch(self, request, *args, **kwargs):
@@ -882,30 +1009,45 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_tap3.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_tap3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_tap3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -913,8 +1055,8 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 class updated_disp_tap4Viewset(viewsets.ModelViewSet):
@@ -930,30 +1072,45 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_tap4.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_tap4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_tap4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -961,8 +1118,8 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 
@@ -980,30 +1137,45 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_cnd_consen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_cnd_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_cnd_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1011,8 +1183,8 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
@@ -1029,30 +1201,45 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_tds_consen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_tds_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_tds_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1060,10 +1247,9 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
     
 class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
@@ -1079,30 +1265,45 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_F_flowsen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_F_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_F_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1110,10 +1311,9 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class getDeviceID(viewsets.ModelViewSet):
 	# define queryset
@@ -1174,30 +1374,45 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = treat_P_flowsen.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = treat_P_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_P_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1205,8 +1420,8 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
@@ -1223,30 +1438,45 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_flowsen1.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_flowsen1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_flowsen1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1254,8 +1484,8 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 
 class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
@@ -1272,30 +1502,45 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_flowsen2.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_flowsen2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_flowsen2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1303,10 +1548,9 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
 	# define queryset
@@ -1322,30 +1566,45 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_flowsen3.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_flowsen3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_flowsen3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1353,10 +1612,9 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
-
 
 class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
 	# define queryset
@@ -1372,30 +1630,45 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
                 did = x.Device_id
                 cmpname = x.componant_name
             
-            qs = disp_flowsen4.objects.filter(device_id=did).order_by('-id')[:1:1]
+            qs_sta = disp_flowsen4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = disp_flowsen4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
-            data = serialize("json", qs)
-            data = json.loads(data)
-            
-            for item in data:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("Data_sta is:",data_sta)
+            for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-            
-            
-            if not data:
+            #new code
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+           
+            if not data_sta and data_set:
                 response_data = {
+
                     'data': [],  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data not found"  # Add the message field
                 }
             else:     
-                data = json.dumps(data[0]["fields"])
-                data = json.loads(data)
-                data = [data]
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+
+                #new code
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+                #new code
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data[0],  # Include the 'data' field
+                     #new code
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
-                    'message': "Data get successfully"  # Add the message field
+                    'message': "Data get successful", # Add the message field
+                    # 'error':err,
                 }
             response_data=[response_data]
         except Exception as e:
@@ -1403,8 +1676,8 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
                         'data':e,  # Include the 'data' field
                         'status': 200,  # Add the status field
                         'message': "Exception found"  # Add the message field
+                        
                     }
-        
         return JsonResponse(response_data, safe=False, content_type="application/json")
 class cnd_tds_YearlyViewset(viewsets.ModelViewSet):
 	# define queryset
