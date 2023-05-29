@@ -378,6 +378,7 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
                 cmpname = x.componant_name
             
             qs_sta = treat_cnd_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            qs_set = treat_cnd_tds_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             fields_to_exclude = ['model', 'pk']
             
             data_sta = serialize("json", qs_sta)
@@ -385,13 +386,16 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
             print("Data_sta is:",data_sta)
             for item in data_sta:
                 item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
             ero=Errors.objects.filter(service='cnd_sen')
-            # err='AAA'
-            # print("err::",ero)
-            # for err in ero:
-            # err=ero.e_discriptions
-            # print("errorsss is:",err)
-            if not data_sta:
+           
+            if not data_sta and data_set:
                 response_data = {
 
                     'data': [],  # Include the 'data' field
@@ -401,9 +405,13 @@ class updated_treat_cnd_tds_senViewset(viewsets.ModelViewSet):
             else:     
                 data_sta = json.dumps(data_sta[0]["fields"])
                 data_sta = json.loads(data_sta)
-                data_sta = [data_sta]
+
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+
+                data_final = [data_sta,data_set]
                 response_data = {
-                    'data': data_sta[0],  # Include the 'data' field
+                    'data': data_final,  # Include the 'data' field
                     'status': 200,  # Add the status field
                     'message': "Data get successful", # Add the message field
                     # 'error':err,
