@@ -34,7 +34,7 @@ class treat_cnd_tds_sen(models.Model):
     spn=models.BigIntegerField(null=True,blank=True)
     tsp=models.BigIntegerField(null=True,blank=True)
     asp=models.BigIntegerField(null=True,blank=True)
-    sensor_type=models.CharField(max_length=50)
+    # sensor_type=models.CharField(max_length=50)
     is_active=models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -51,11 +51,11 @@ class treat_cnd_tds_sen(models.Model):
 class treat_tds_sen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
-    cnd=models.BigIntegerField(null=True,blank=True)
+    tds=models.BigIntegerField(null=True,blank=True)
     spn=models.BigIntegerField(null=True,blank=True)
     tsp=models.BigIntegerField(null=True,blank=True)
     asp=models.BigIntegerField(null=True,blank=True)
-    sensor_type=models.CharField(max_length=50)
+    # sensor_type=models.CharField(max_length=50)
     is_active=models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -304,7 +304,7 @@ class disp_cnd_consen(models.Model):
 class disp_tds_consen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
-    cnd=models.BigIntegerField(null=True,blank=True)
+    tds=models.BigIntegerField(null=True,blank=True)
     spn=models.BigIntegerField(null=True,blank=True)
     asp=models.BigIntegerField(null=True,blank=True)
     year=models.CharField(max_length=50)
@@ -702,7 +702,7 @@ class treat_panel(models.Model):
     spn=models.BigIntegerField(null=True,blank=True)
     nmv=models.BigIntegerField(null=True,blank=True)
     stp=models.CharField(max_length=50,null=True,blank=True)
-    srt=models.BigIntegerField(null=True,blank=True)
+    srt=models.CharField(max_length=50,null=True,blank=True)
     bkt=models.BigIntegerField(null=True,blank=True)
     rst=models.BigIntegerField(null=True,blank=True)
     err=models.CharField(max_length=50,null=True,blank=True)
@@ -2982,7 +2982,7 @@ class disp_flowsen4(models.Model):
 
 
 
-class disp_flowsen1_repo_yearly(models.Model):
+class flowsen1_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -2999,7 +2999,7 @@ class disp_flowsen1_repo_yearly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen1_repo_monthly(models.Model):
+class flowsen1_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3016,7 +3016,7 @@ class disp_flowsen1_repo_monthly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen1_repo_daily(models.Model):
+class flowsen1_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3033,7 +3033,7 @@ class disp_flowsen1_repo_daily(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen1_repo_hourly(models.Model):
+class flowsen1_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3050,7 +3050,7 @@ class disp_flowsen1_repo_hourly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen2_repo_yearly(models.Model):
+class flowsen2_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3067,7 +3067,7 @@ class disp_flowsen2_repo_yearly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen2_repo_monthly(models.Model):
+class flowsen2_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3084,7 +3084,7 @@ class disp_flowsen2_repo_monthly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen2_repo_daily(models.Model):
+class flowsen2_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3101,7 +3101,7 @@ class disp_flowsen2_repo_daily(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen2_repo_hourly(models.Model):
+class flowsen2_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3118,7 +3118,7 @@ class disp_flowsen2_repo_hourly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen3_repo_yearly(models.Model):
+class flowsen3_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3135,7 +3135,7 @@ class disp_flowsen3_repo_yearly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen3_repo_monthly(models.Model):
+class flowsen3_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3152,7 +3152,7 @@ class disp_flowsen3_repo_monthly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen3_repo_daily(models.Model):
+class flowsen3_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3169,7 +3169,7 @@ class disp_flowsen3_repo_daily(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen3_repo_hourly(models.Model):
+class flowsen3_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3186,7 +3186,7 @@ class disp_flowsen3_repo_hourly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen4_repo_yearly(models.Model):
+class flowsen4_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3203,7 +3203,7 @@ class disp_flowsen4_repo_yearly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen4_repo_monthly(models.Model):
+class flowsen4_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3220,7 +3220,7 @@ class disp_flowsen4_repo_monthly(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen4_repo_daily(models.Model):
+class flowsen4_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -3237,7 +3237,7 @@ class disp_flowsen4_repo_daily(models.Model):
     class Meta:
         app_label = 'devices'
 
-class disp_flowsen4_repo_hourly(models.Model):
+class flowsen4_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
