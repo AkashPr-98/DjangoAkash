@@ -27,7 +27,7 @@ class user_information(models.Model):
         return self.User_id.username
     class Meta:
         app_label = 'devices'
-class treat_cnd_tds_sen(models.Model):
+class treat_cnd_sen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     cnd=models.BigIntegerField(null=True,blank=True)
@@ -72,7 +72,7 @@ class tds_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     tsp=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
@@ -93,7 +93,7 @@ class tds_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     tsp=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
@@ -106,14 +106,14 @@ class tds_repo_daily(models.Model):
     hour =  models.CharField(max_length=50)
 
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.tsp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 class tds_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     tsp=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
@@ -126,7 +126,7 @@ class tds_repo_monthly(models.Model):
     hour =  models.CharField(max_length=50)
 
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.tsp,self.created_at,self.updated_at
     
     class Meta:
         app_label = 'devices'
@@ -134,7 +134,7 @@ class tds_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     tsp=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
@@ -147,14 +147,14 @@ class tds_repo_yearly(models.Model):
     hour =  models.CharField(max_length=50)
 
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.tsp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 
 class treat_tds(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
-    cnd=models.BigIntegerField(null=True,blank=True)
+    tds=models.BigIntegerField(null=True,blank=True)
     spn=models.BigIntegerField(null=True,blank=True)
     tsp=models.BigIntegerField(null=True,blank=True)
     asp=models.BigIntegerField(null=True,blank=True)
@@ -342,7 +342,7 @@ class disp_cnd_consen(models.Model):
 class disp_tds_consen(models.Model):
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
-    cnd=models.BigIntegerField(null=True,blank=True)
+    tds=models.BigIntegerField(null=True,blank=True)
     spn=models.BigIntegerField(null=True,blank=True)
     asp=models.BigIntegerField(null=True,blank=True)
     year=models.CharField(max_length=50)
@@ -378,7 +378,7 @@ class tds_consen_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -388,7 +388,7 @@ class tds_consen_repo_hourly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 
@@ -413,7 +413,7 @@ class tds_consen_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -423,7 +423,7 @@ class tds_consen_repo_daily(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 
@@ -448,7 +448,7 @@ class tds_consen_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -458,7 +458,7 @@ class tds_consen_repo_monthly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 
@@ -483,7 +483,7 @@ class tds_consen_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -493,7 +493,7 @@ class tds_consen_repo_yearly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 class treat_ampv1(models.Model):
@@ -790,7 +790,7 @@ class repo_latestdata(models.Model):
 
 
     def __str__(self):
-        return self.device_id,self.message_type,self.cnd_tds,self.rwp,self.hpp,self.panel,self.flowsen,self.ampv1,self.ampv2,self.ampv3,self.ampv4,self.ampv5,self.atm,self.tap1,self.tap2,self.tap3,self.tap4,self.consen
+        return self.device_id,self.message_type,self.cnd_sen,self.rwp,self.hpp,self.panel,self.flowsen,self.ampv1,self.ampv2,self.ampv3,self.ampv4,self.ampv5,self.atm,self.tap1,self.tap2,self.tap3,self.tap4,self.consen
     
     class Meta:
         app_label = 'devices'
@@ -825,7 +825,7 @@ class repo_history(models.Model):
 #         return self.device_id,self.service,self.sum_cnd,self.count,self.avg_cnd,self.created_at,self.updated_at
     # class Meta:
     #     app_label = 'devices'
-class cnd_tds_repo_hourly(models.Model):
+class cnd_repo_hourly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -1691,7 +1691,7 @@ class panel_repo_yearly(models.Model):
         return self.device_id,self.service,self.ipv,self.spn,self.unv,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class cnd_tds_repo_daily(models.Model):
+class cnd_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -1711,7 +1711,7 @@ class cnd_tds_repo_daily(models.Model):
         return self.device_id,self.service,self.cnd,self.spn,self.tsp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
-class cnd_tds_repo_monthly(models.Model):
+class cnd_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -1732,7 +1732,7 @@ class cnd_tds_repo_monthly(models.Model):
     
     class Meta:
         app_label = 'devices'
-class cnd_tds_repo_yearly(models.Model):
+class cnd_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
@@ -2300,7 +2300,7 @@ class tds_consen_repo_daily(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2335,7 +2335,7 @@ class tds_consen_repo_monthly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2345,7 +2345,7 @@ class tds_consen_repo_monthly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 
@@ -2371,7 +2371,7 @@ class tds_consen_repo_yearly(models.Model):
     id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     service=models.CharField(max_length=100,null=True,blank=True)
-    cnd=models.JSONField(null=True,blank=True)
+    tds=models.JSONField(null=True,blank=True)
     spn=models.JSONField(null=True,blank=True)
     asp=models.JSONField(null=True,blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -2381,7 +2381,7 @@ class tds_consen_repo_yearly(models.Model):
     day =  models.CharField(max_length=50)
     hour =  models.CharField(max_length=50)
     def __str__(self) -> str:
-        return self.device_id,self.service,self.cnd,self.spn,self.asp,self.created_at,self.updated_at
+        return self.device_id,self.service,self.tds,self.spn,self.asp,self.created_at,self.updated_at
     class Meta:
         app_label = 'devices'
 class device_info(models.Model):
@@ -2601,7 +2601,7 @@ class Rwp_state(models.Model):
     device_id=models.CharField(max_length=100)
     def str(self):
         return self.sts
-    
+
     class Meta:
         app_label = 'devices'
 
