@@ -645,8 +645,10 @@ class treat_ampv5(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
+
         app_label = 'devices'
 class treat_rwp(models.Model):
+    id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     sts=models.CharField(max_length=50,null=True,blank=True)
@@ -757,6 +759,7 @@ class treat_P_flowsen(models.Model):
         app_label = 'devices'
 
 class repo_latestdata(models.Model):
+    id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     cnd_sen=models.JSONField(null=True,blank=True)
@@ -795,6 +798,7 @@ class repo_latestdata(models.Model):
     class Meta:
         app_label = 'devices'
 class repo_history(models.Model):
+    id = models.BigAutoField(primary_key=True)
     device_id=models.CharField(max_length=100)
     message_type=models.CharField(max_length=50)
     component_name=models.CharField(max_length=100)

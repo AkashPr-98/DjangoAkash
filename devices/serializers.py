@@ -557,81 +557,81 @@ class ampv2settingSerializer(serializers.HyperlinkedModelSerializer):
 class flowsen1_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen1_repo_daily
-		fields='_all_'
+		fields='__all__'
 class flowsen1_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen1_repo_hourly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen1_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen1_repo_monthly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen1_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen1_repo_yearly
-		fields='_all_'
+		fields='__all__'
 
 
 class flowsen2_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen2_repo_daily
-		fields='_all_'
+		fields='__all__'
 class flowsen2_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen2_repo_hourly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen2_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen2_repo_monthly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen2_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen2_repo_yearly
-		fields='_all_'
+		fields='__all__'
 
 
 class flowsen3_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen3_repo_daily
-		fields='_all_'
+		fields='__all__'
 class flowsen3_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen3_repo_hourly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen3_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen3_repo_monthly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen3_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen3_repo_yearly
-		fields='_all_'
+		fields='__all__'
 
 
 class flowsen4_DailySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen4_repo_daily
-		fields='_all_'
+		fields='__all__'
 class flowsen4_HourlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen4_repo_hourly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen4_MonthlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen4_repo_monthly
-		fields='_all_'
+		fields='__all__'
 
 class flowsen4_YearlySerializer(serializers.HyperlinkedModelSerializer):
 	class Meta:
 		model = flowsen4_repo_yearly
-		fields='_all_'
+		fields='__all__'
 #all data form minit tables used for fornt end
 
 class all_pannelSerializer(serializers.HyperlinkedModelSerializer):
