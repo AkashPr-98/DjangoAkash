@@ -47,7 +47,7 @@ class treat_cnd_sen(models.Model):
 
     class Meta:
         app_label = 'devices'
-        collection = 'treat_cnd_sen'
+        # collection = 'treat_cnd_sen'
 
 class treat_tds_sen(models.Model):
     device_id=models.CharField(max_length=100)
