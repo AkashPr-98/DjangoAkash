@@ -287,35 +287,43 @@ class updated_treat_rwpViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_rwp.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            data_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_rwp.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            data_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='rwp')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -403,7 +411,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         print(dinfo,type(dinfo))
         qs_sta = treat_cnd_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -415,7 +423,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         
         qs_set = treat_cnd_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -524,7 +532,7 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
         
         qs_sta = treat_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -536,7 +544,7 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
         
         qs_set = treat_tds_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -771,7 +779,7 @@ class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
             qs_sta = treat_ampv1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
             # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
             if not qs_sta:
-                qs_sta = {}
+                data_sta = {}
             else:
                 data_sta = serialize("json", qs_sta)
                 data_sta = json.loads(data_sta)
@@ -783,7 +791,7 @@ class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
             
             qs_set = treat_ampv1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
             if not qs_set:
-                qs_set = {}
+                data_set = {}
             else:
                 data_set = serialize("json", qs_set)
                 data_set = json.loads(data_set)
@@ -894,7 +902,7 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
         qs_sta = treat_ampv2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-                qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -906,7 +914,7 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
         
         qs_set = treat_ampv2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1018,7 +1026,7 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
         qs_sta = treat_panel.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-                qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1030,7 +1038,7 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
         
         qs_set = treat_panel.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1142,7 +1150,7 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='atm')
         if not qs_sta:
-                qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1154,7 +1162,7 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
         
         qs_set = disp_atm.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1313,7 +1321,7 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
         qs_sta = disp_tap1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-                qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1325,7 +1333,7 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_tap1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1435,7 +1443,7 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
         qs_sta = disp_tap2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-                qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1447,7 +1455,7 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_tap2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1559,7 +1567,7 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
         qs_sta = disp_tap3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1571,7 +1579,7 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_tap3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1682,7 +1690,7 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
         qs_sta = disp_tap4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1694,7 +1702,7 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_tap4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1807,7 +1815,7 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
         qs_sta = disp_cnd_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1819,7 +1827,7 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
         
         qs_set = disp_cnd_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -1932,7 +1940,7 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
         qs_sta = disp_tds_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -1944,7 +1952,7 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
         
         qs_set = disp_tds_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2056,7 +2064,7 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
         qs_sta = treat_F_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2068,7 +2076,7 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
         
         qs_set = treat_F_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2225,7 +2233,7 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
         qs_sta = treat_P_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2237,7 +2245,7 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
         
         qs_set = treat_P_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2349,7 +2357,7 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
         qs_sta = disp_flowsen1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2361,7 +2369,7 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_flowsen1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2472,7 +2480,7 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
         qs_sta = disp_flowsen2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2484,7 +2492,7 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_flowsen2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2596,7 +2604,7 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
         qs_sta = disp_flowsen3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2608,7 +2616,7 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_flowsen3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
@@ -2720,7 +2728,7 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
         qs_sta = disp_flowsen4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -2732,7 +2740,7 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
         
         qs_set = disp_flowsen4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
