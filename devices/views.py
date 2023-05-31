@@ -402,35 +402,42 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_cnd_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        if not qs_sta:
+            qs_sta = {}
+        elif:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_cnd_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        elif:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='cnd')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        elif:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -4915,8 +4922,13 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'cnd_sen':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 # error_message = traceback.format_exc()
                 print("error is:",e)
             # Send the error message to the WebSocket client
@@ -5145,8 +5157,13 @@ def testo(request):
                         yr_data.save()
                                 
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'tds_sen':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
 
                 # global eg
@@ -5352,8 +5369,13 @@ def testo(request):
                         yr_data=rwp_repo_yearly.objects.create(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='rwp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'rwp':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='rwp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -5563,8 +5585,13 @@ def testo(request):
                         yr_data=hpp_repo_yearly.objects.create(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='hpp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'hpp':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='hpp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -5830,8 +5857,13 @@ def testo(request):
                         yr_data=panel_repo_yearly.objects.create(device_id=device_id,service='panel',ipv={'sum':sums_ipv,'avg':avgs_ipv,'count':count},unv={'sum':sums_unv,'avg':avgs_unv,'count':count},ovv={'sum':sums_ovv,'avg':avgs_ovv,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},nmv={'sum':sums_nmv,'avg':avgs_nmv,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='hpp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'panel':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='panel',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -6052,8 +6084,13 @@ def testo(request):
                         yr_data=ampv1_repo_yearly.objects.create(device_id=device_id,service='ampv1',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'ampv1':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -6279,8 +6316,13 @@ def testo(request):
                         yr_data=ampv2_repo_yearly.objects.create(device_id=device_id,service='ampv2',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'ampv2':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
@@ -6503,8 +6545,13 @@ def testo(request):
                         yr_data=ampv3_repo_yearly.objects.create(device_id=device_id,service='ampv3',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
-                erro.save()
+                le=Errors.objects.all().last()
+                print("le is:",le,type(le))
+                if le.service == 'ampv3':
+                    print("Error is alrady prasent")
+                else:
+                    erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
+                    erro.save()
                 error_message = e
                 # global eg
                 eg = e
