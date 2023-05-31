@@ -644,7 +644,7 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
         print(dinfo,type(dinfo))
         qs_sta = treat_hpp.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         if not qs_sta:
-            qs_sta = {}
+            data_sta = {}
         else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
@@ -656,7 +656,7 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
         
         qs_set = treat_hpp.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
-            qs_set = {}
+            data_set = {}
         else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
