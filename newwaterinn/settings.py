@@ -109,13 +109,13 @@ ASGI_APPLICATION = 'newwaterinn.asgi.application'
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ORIGIN_WHITELIST = [
     "http://127.0.0.1:8000",
-    "http://65.2.189.24:8000"
+    "http://13.126.84.134:8000"
 ]
 
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",
-    "http://65.2.189.24:8000"
+    "http://13.126.84.134:8000"
 ]
 ALLOWED_HOSTS=['*']
 CORS_ORIGIN_ALLOW_ALL = True
