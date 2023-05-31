@@ -162,9 +162,7 @@ router.register(r'updated_disp_flowsen2',updated_disp_flowsen2Viewset,basename='
 router.register(r'updated_disp_flowsen3',updated_disp_flowsen3Viewset,basename='disp_flowsen3')
 router.register(r'updated_disp_flowsen4',updated_disp_flowsen4Viewset,basename='disp_flowsen4')
 router.register(r'get_device_id',getDeviceID,basename='get_device_id')
-#all data from minit tables
-router.register(r'all_minit_tablespannel',all_pannelminitViewset,basename='minit_tablespannel')
-router.register(r'all_minit_tablesatm',all_atmminitViewset,basename='minit_tablesatm')
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),

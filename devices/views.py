@@ -19,6 +19,7 @@ from asgiref.sync import async_to_sync
 from django.http import HttpResponse,Http404
 from channels.generic.websocket import WebsocketConsumer
 import json
+from rest_framework import generics
 
 from django.http import HttpResponse
 from datetime import datetime
@@ -133,18 +134,146 @@ def dateandtime():
 qs={}
 
 #all data from minit table
-class all_pannelminitViewset(viewsets.ModelViewSet):
+class all_panelListAPIView(generics.ListAPIView):
     # define queryset
 	queryset = treat_panel.objects.all()
 
+	serializer_class = all_panelSerializer
+class all_cndListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_cnd_sen.objects.all()
+
 	# specify serializer to be used
-	serializer_class = all_pannelSerializer
-class all_atmminitViewset(viewsets.ModelViewSet):
+	serializer_class = all_cndSerializer
+class all_tdsListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_tds_sen.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tdsSerializer
+class all_rwpListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_rwp.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_rwpSerializer
+class all_ampv1ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_ampv1.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_ampv1Serializer
+        
+class all_ampv2ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_ampv2.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_ampv2Serializer
+        
+class all_ampv3ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_ampv3.objects.all()
+	# specify serializer to be used
+	serializer_class = all_ampv3Serializer
+class all_ampv4ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_ampv4.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_ampv4Serializer
+
+class all_ampv5ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_ampv5.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_ampv5Serializer
+class all_hppListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_hpp.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_hppSerializer
+class all_F_flowsenListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_F_flowsen.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_F_flowsenSerializer
+class all_P_flowsenListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = treat_P_flowsen.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_P_flowsenSerializer
+class all_cnd_consenListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_cnd_consen.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_cnd_consenSerializer
+class all_tds_consenListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_tds_consen.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tds_consenSerializer
+
+class all_atmListAPIView(generics.ListAPIView):
     # define queryset
 	queryset = disp_atm.objects.all()
 
 	# specify serializer to be used
 	serializer_class = all_atmSerializer
+class all_tap1ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_tap1.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tap1Serializer
+class all_tap2ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_tap2.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tap2Serializer
+class all_tap3ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_tap3.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tap3Serializer
+class all_tap4ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_tap4.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_tap4Serializer
+class all_flowsen1ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_flowsen1.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_flowsen1Serializer
+class all_flowsen2ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_flowsen2.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_flowsen2Serializer
+class all_flowsen3ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_flowsen3.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_flowsen3Serializer
+class all_flowsen4ListAPIView(generics.ListAPIView):
+    # define queryset
+	queryset = disp_flowsen4.objects.all()
+
+	# specify serializer to be used
+	serializer_class = all_flowsen4Serializer
 import json
 
 class updated_treat_rwpViewset(viewsets.ModelViewSet):

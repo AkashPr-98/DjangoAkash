@@ -634,11 +634,103 @@ class flowsen4_YearlySerializer(serializers.HyperlinkedModelSerializer):
 		fields='__all__'
 #all data form minit tables used for fornt end
 
-class all_pannelSerializer(serializers.HyperlinkedModelSerializer):
+class all_panelSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = treat_panel
 		fields = '__all__'
-class all_atmSerializer(serializers.HyperlinkedModelSerializer):
+class all_cndSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_cnd_sen
+		fields = '__all__'
+class all_tdsSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_tds_sen
+		fields = '__all__'
+class all_rwpSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_rwp
+		fields = '__all__'
+class all_hppSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_hpp
+		fields = '__all__'
+class all_ampv1Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_ampv1
+		fields = '__all__'
+class all_ampv2Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_ampv2
+		fields = '__all__'
+class all_ampv3Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = treat_ampv3
+        fields = '__all__'
+class all_ampv4Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_ampv4
+		fields = '__all__'
+
+class all_ampv5Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_ampv5
+		fields = '__all__'
+class all_hppSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_hpp
+		fields = '__all__'
+class all_F_flowsenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_F_flowsen
+		fields = '__all__'
+class all_P_flowsenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = treat_P_flowsen
+		fields = '__all__'
+class all_cnd_consenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_cnd_consen
+		fields = '__all__'
+
+class all_tds_consenSerializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_tds_consen
+		fields = '__all__'
+
+class all_atmSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = disp_atm
+		fields = '__all__'
+
+class all_tap1Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_tap1
+		fields = '__all__'
+class all_tap2Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_tap2
+		fields = '__all__'
+class all_tap3Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_tap3
+		fields = '__all__'
+class all_tap4Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_tap4
+		fields = '__all__'
+class all_flowsen1Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_flowsen1
+		fields = '__all__'
+class all_flowsen2Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_flowsen2
+		fields = '__all__'
+class all_flowsen3Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_flowsen3
+		fields = '__all__'
+class all_flowsen4Serializer(serializers.ModelSerializer):
+	class Meta:
+		model = disp_flowsen4
 		fields = '__all__'
