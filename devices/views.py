@@ -521,37 +521,44 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
         print(data,type(data),"DATA")
         dinfo = device_info.objects.filter(**data)
         did=dinfo[0].Device_id
-        print(dinfo,type(dinfo))
+        
         qs_sta = treat_tds_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_tds_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tds')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -636,35 +643,42 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_hpp.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_hpp.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='hpp')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -675,7 +689,8 @@ class updated_treat_hppViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")                        
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -744,54 +759,66 @@ class updated_treat_ampv1Viewset(viewsets.ModelViewSet):
 	# define queryset
 
     def dispatch(self, request, *args, **kwargs):
-        fields_to_exclude = ['model', 'pk']
-        print(request.body,"BODY")
-        data = json.loads(request.body)
-        print(data,type(data),"DATA")
-        dinfo = device_info.objects.filter(**data)
-        did=dinfo[0].Device_id
-        print(dinfo,type(dinfo))
-        qs_sta = treat_ampv1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
-        qs_set = treat_ampv1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
-        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
-        last_error=Errors.objects.filter(service='ampv1')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+        try:
+            fields_to_exclude = ['model', 'pk']
+            print(request.body,"BODY")
+            data = json.loads(request.body)
+            print(data,type(data),"DATA")
+            dinfo = device_info.objects.filter(**data)
+            did=dinfo[0].Device_id
         
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+            print(dinfo,type(dinfo))
+            qs_sta = treat_ampv1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+            # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+            if not qs_sta:
+                qs_sta = {}
+            else:
+                data_sta = serialize("json", qs_sta)
+                data_sta = json.loads(data_sta)
+                print("data_sta is:",data_sta)
+                for item in data_sta:
+                    item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+                data_sta = json.dumps(data_sta[0]["fields"])
+                data_sta = json.loads(data_sta)
+            
+            qs_set = treat_ampv1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+            if not qs_set:
+                qs_set = {}
+            else:
+                data_set = serialize("json", qs_set)
+                data_set = json.loads(data_set)
+                print("data_set is:",data_set)
+                for item in data_set:
+                    item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
 
-        data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
-        response_data = {
-            #new code
-        'data': data_final,  # Include the 'data' field
-        'status': 200,  # Add the status field
-        'message': "Data get successful", # Add the message field
-        # 'error':err,
-        }
-        response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+                data_set = json.dumps(data_set[0]["fields"])
+                data_set = json.loads(data_set)
+
+            # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+            last_error=Errors.objects.filter(service='ampv1')
+            if not last_error:
+                last_error={}
+            else:
+                last_error = serialize("json", last_error)
+                last_error = json.loads(last_error)
+                for item in last_error:
+                    item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+                
+                last_error = json.dumps(last_error[0]["fields"])
+                last_error = json.loads(last_error)
+
+            data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
+            response_data = {
+                #new code
+            'data': data_final,  # Include the 'data' field
+            'status': 200,  # Add the status field
+            'message': "Data get successful", # Add the message field
+            # 'error':err,
+            }
+            response_data=[response_data]
+            return JsonResponse(response_data, safe=False, content_type="application/json")    
+        except Exception as e :
+            print(e)  
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -865,35 +892,43 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_ampv2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+                qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_ampv2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='ampv2')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -904,7 +939,8 @@ class updated_treat_ampv2Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+    
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -980,35 +1016,43 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_panel.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+                qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_panel.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='panel')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1019,7 +1063,8 @@ class updated_treat_panelViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1094,35 +1139,44 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_atm.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
-        qs_set = disp_atm.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='atm')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+        if not qs_sta:
+                qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
         
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        qs_set = disp_atm.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        last_error=Errors.objects.filter(service='atm')
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1133,7 +1187,8 @@ class updated_disp_atmViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1256,35 +1311,43 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_tap1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+                qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_tap1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tap1')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1295,7 +1358,7 @@ class updated_disp_tap1Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1370,35 +1433,43 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_tap2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+                qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_tap2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tap2')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1409,7 +1480,8 @@ class updated_disp_tap2Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+    
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1485,35 +1557,43 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_tap3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_tap3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tap3')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1524,7 +1604,8 @@ class updated_disp_tap3Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1599,35 +1680,43 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_tap4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_tap4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tap4')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1638,8 +1727,8 @@ class updated_disp_tap4Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-                            
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+                        
 
     # def dispatch(self, request, *args, **kwargs):
     #     try:
@@ -1716,35 +1805,43 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_cnd_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_cnd_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='cnd_consen')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1755,8 +1852,8 @@ class updated_disp_cnd_consenViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+    
     # queryset = disp_cnd_consen
     # serializer_class = 
     # def dispatch(self, request, *args, **kwargs):
@@ -1833,35 +1930,43 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_tds_consen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_tds_consen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='tds_consen')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1872,7 +1977,8 @@ class updated_disp_tds_consenViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -1948,35 +2054,43 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_F_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_F_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='F_flowsen')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -1987,7 +2101,8 @@ class updated_treat_F_flowsenViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+        
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -2108,35 +2223,43 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = treat_P_flowsen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = treat_P_flowsen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='P_flowsen')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -2147,8 +2270,8 @@ class updated_treat_P_flowsenViewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-                            
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+                        
 #     def dispatch(self, request, *args, **kwargs):
 #         try:
 #             did = 0
@@ -2224,35 +2347,43 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_flowsen1.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_flowsen1.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='flowsen1')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -2263,9 +2394,8 @@ class updated_disp_flowsen1Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-                            
-
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+    
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -2340,35 +2470,43 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_flowsen2.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_flowsen2.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='flowsen2')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -2379,7 +2517,7 @@ class updated_disp_flowsen2Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
                             
                        
     # def dispatch(self, request, *args, **kwargs):
@@ -2456,35 +2594,43 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_flowsen3.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_flowsen3.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='flowsen3')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -2495,8 +2641,8 @@ class updated_disp_flowsen3Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-                            
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+                        
                           
     # def dispatch(self, request, *args, **kwargs):
     #     try:
@@ -2572,35 +2718,43 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
         did=dinfo[0].Device_id
         print(dinfo,type(dinfo))
         qs_sta = disp_flowsen4.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
+        # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
+        if not qs_sta:
+            qs_sta = {}
+        else:
+            data_sta = serialize("json", qs_sta)
+            data_sta = json.loads(data_sta)
+            print("data_sta is:",data_sta)
+            for item in data_sta:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            data_sta = json.dumps(data_sta[0]["fields"])
+            data_sta = json.loads(data_sta)
+        
         qs_set = disp_flowsen4.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
+        if not qs_set:
+            qs_set = {}
+        else:
+            data_set = serialize("json", qs_set)
+            data_set = json.loads(data_set)
+            print("data_set is:",data_set)
+            for item in data_set:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+
+            data_set = json.dumps(data_set[0]["fields"])
+            data_set = json.loads(data_set)
+
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
         last_error=Errors.objects.filter(service='flowsen4')
-
-        data_set = serialize("json", qs_set)
-        data_set = json.loads(data_set)
-        print("data_set is:",data_set)
-        for item in data_set:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_sta = serialize("json", qs_sta)
-        data_sta = json.loads(data_sta)
-        print("data_sta is:",data_sta)
-        for item in data_sta:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-
-        data_set = json.dumps(data_set[0]["fields"])
-        data_set = json.loads(data_set)
-
-        data_sta = json.dumps(data_sta[0]["fields"])
-        data_sta = json.loads(data_sta)
-
-        last_error = serialize("json", last_error)
-        last_error = json.loads(last_error)
-        for item in last_error:
-            item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
-        
-        last_error = json.dumps(last_error[0]["fields"])
-        last_error = json.loads(last_error)
+        if not last_error:
+            last_error={}
+        else:
+            last_error = serialize("json", last_error)
+            last_error = json.loads(last_error)
+            for item in last_error:
+                item['fields'] = {k: v for k, v in item['fields'].items() if k not in fields_to_exclude}
+            
+            last_error = json.dumps(last_error[0]["fields"])
+            last_error = json.loads(last_error)
 
         data_final = {'data_sta':data_sta,'data_set':data_set,'error':last_error}
         response_data = {
@@ -2611,9 +2765,8 @@ class updated_disp_flowsen4Viewset(viewsets.ModelViewSet):
         # 'error':err,
         }
         response_data=[response_data]
-        return JsonResponse(response_data, safe=False, content_type="application/json")
-                            
-                       
+        return JsonResponse(response_data, safe=False, content_type="application/json")    
+                    
     # def dispatch(self, request, *args, **kwargs):
     #     try:
     #         did = 0
@@ -5537,9 +5690,9 @@ def testo(request):
                         avgs_asp=sums_asp/count
                     hr=hpp_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id)
                     if hr:
-                        yr_data=hpp_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        yr_data=hpp_repo_monthly.objects.filter(year=dd[0],month=dd[1],device_id=device_id).update(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                     else:
-                        yr_data=hpp_repo_monthly.objects.create(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
+                        yr_data=hpp_repo_monthly.objects.create(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
                 
                     # year
