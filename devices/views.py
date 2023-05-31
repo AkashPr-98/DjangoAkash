@@ -404,7 +404,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         qs_sta = treat_cnd_sen.objects.filter(device_id=did,message_type="updsta").order_by('-id')[:1:1]
         if not qs_sta:
             qs_sta = {}
-        elif:
+        else:
             data_sta = serialize("json", qs_sta)
             data_sta = json.loads(data_sta)
             print("data_sta is:",data_sta)
@@ -416,7 +416,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         qs_set = treat_cnd_sen.objects.filter(device_id=did,message_type="updset").order_by('-id')[:1:1]
         if not qs_set:
             qs_set = {}
-        elif:
+        else:
             data_set = serialize("json", qs_set)
             data_set = json.loads(data_set)
             print("data_set is:",data_set)
@@ -430,7 +430,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
         last_error=Errors.objects.filter(service='cnd')
         if not last_error:
             last_error={}
-        elif:
+        else:
             last_error = serialize("json", last_error)
             last_error = json.loads(last_error)
             for item in last_error:
