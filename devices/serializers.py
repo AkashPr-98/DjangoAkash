@@ -734,3 +734,8 @@ class all_flowsen4Serializer(serializers.ModelSerializer):
 	class Meta:
 		model = disp_flowsen4
 		fields = '__all__'
+
+class last_ten_errors(serializers.ModelSerializer):
+	class Meta:
+		model = Errors
+		fields = '__all__'

@@ -58,6 +58,8 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from django.core.serializers import serialize
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 # Use settings and models as needed
 
@@ -132,7 +134,11 @@ def dateandtime():
 
 
 qs={}
-
+class LastRecordsView(APIView):
+    def get(self, request):
+        records = Errors.objects.order_by('-id')[:10]
+        serializer = last_ten_errors(records, many=True)
+        return Response(serializer.data)
 #all data from minit table
 class all_panelListAPIView(generics.ListAPIView):
     # define queryset
@@ -435,7 +441,7 @@ class updated_treat_cnd_senViewset(viewsets.ModelViewSet):
             data_set = json.loads(data_set)
 
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
-        last_error=Errors.objects.filter(service='cnd')
+        last_error=Errors.objects.filter(service='cnd_sen')
         if not last_error:
             last_error={}
         else:
@@ -556,7 +562,7 @@ class updated_treat_tds_senViewset(viewsets.ModelViewSet):
             data_set = json.loads(data_set)
 
         # last_error=Errors.objects.filter(service='cnd_consen').order_by('-id')[:1:10]
-        last_error=Errors.objects.filter(service='tds')
+        last_error=Errors.objects.filter(service='tds_sen')
         if not last_error:
             last_error={}
         else:
@@ -3821,7 +3827,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
                 unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
                 
                 value_list=list(data_dict.values())
-                
+                print("valuelist is:",value_list)
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
                     
@@ -3832,8 +3838,9 @@ class tdssettingViewset(viewsets.ModelViewSet):
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-                
-
+                print("data successfully send to hivemqtt")
+                print("did is:",did)
+                print("cname:",cmpname)
             except Exception as e:
                 pass    
             return super().dispatch(request)    
@@ -4670,8 +4677,6 @@ def testo(request):
                 nmv=removed_col[1]
             elif removed_col[0]=='stp':
                 stp=removed_col[1]
-            elif removed_col[0]=='srt':
-                srt=removed_col[1]
             elif removed_col[0]=='bkt':
                 bkt=removed_col[1]
             elif removed_col[0]=='rst':
@@ -4693,7 +4698,9 @@ def testo(request):
             elif removed_col[0]=='cct':
                 cct=removed_col[1]
             elif removed_col[0]=='srt':
-                srt=removed_col[1]
+                srt1=removed_col[1]
+                srt2=removed_col[2]
+                srt=srt1+':'+srt2
             elif removed_col[0]=='bkt':
                 bkt=removed_col[1]
             elif removed_col[0]=='mot':
@@ -5083,20 +5090,20 @@ def testo(request):
                         yr_data.save()
                     
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'cnd_sen':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'cnd_sen':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
                 # error_message = traceback.format_exc()
-                print("error is:",e)
+                # print("error is:",e)
             # Send the error message to the WebSocket client
                 # send_error_message_to_websocket(error_message)
-                error_message = e
-                global eg
-                eg = e
+                # error_message = e
+                # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')
@@ -5104,7 +5111,6 @@ def testo(request):
 
             try:
                 if 'tds_sen'== components:
-                    print("intds")
                     if device_id not in device_idlist:
                         repo_latestdata.objects.create(device_id=device_id,message_type=msg_type,tds_sen=mydata1)
                     else:
@@ -5135,8 +5141,7 @@ def testo(request):
                         repo_latestobj = repo_latestdata.objects.filter(device_id=device_id).update(device_id=device_id, message_type=msg_type, tds_sen=olddata)
                     
                     dd=dateandtime()  
-                    
-                    print("***")
+                
                     ds=treat_tds_sen.objects.create(device_id=device_id,message_type=msg_type,tds=tds,spn=spn,tsp=tsp,asp=asp,year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     ds.save()
                     # Hour
@@ -5318,17 +5323,17 @@ def testo(request):
                         yr_data.save()
                                 
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'tds_sen':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'tds_sen':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_sen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
+                # error_message = e
 
-                # global eg
-                eg = e
+                # # global eg
+                # eg = e
             try:
                 if 'rwp'==components:
                     
@@ -5475,12 +5480,8 @@ def testo(request):
                                 sums_asp=sums_asp+asps
                                 count=count+1
                                 count_sum=count_sum+count_cnd
-                                
-                        
                         
                         avgs_cnd=sums_cnd/count
-                        
-
                         avgs_spn=sums_spn/count
                         
                         avgs_tsp=sums_tsp/count
@@ -5530,16 +5531,16 @@ def testo(request):
                         yr_data=rwp_repo_yearly.objects.create(device_id=device_id,service='rwp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'rwp':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'rwp':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='rwp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')           
@@ -5746,16 +5747,16 @@ def testo(request):
                         yr_data=hpp_repo_yearly.objects.create(device_id=device_id,service='hpp',crt={'sum':sums_cnd,'avg':avgs_cnd,'count':count},olc={'sum':sums_spn,'avg':avgs_spn,'count':count},drc={'sum':sums_tsp,'avg':avgs_tsp,'count':count},spn={'sum':sums_asp,'avg':avgs_asp,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'hpp':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'hpp':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='hpp',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')  
@@ -5823,6 +5824,7 @@ def testo(request):
                                 sums_ovv=sums_ovv+ovvo
                                 sums_spn=sums_spn+spno
                                 sums_nmv=sums_nmv+nmvo
+                                srto=srto.replace(':','')
                                 sums_srt=sums_srt+int(srto)
                                 sums_bkt=sums_bkt+bkto
                                 
@@ -5882,6 +5884,7 @@ def testo(request):
                                 sums_ovv=sums_ovv+ovv
                                 sums_spn=sums_spn+spn
                                 sums_nmv=sums_nmv+nmv
+                                srt=srt.replace(':','')
                                 sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
@@ -5939,6 +5942,7 @@ def testo(request):
                                 sums_ovv=sums_ovv+ovv
                                 sums_spn=sums_spn+spn
                                 sums_nmv=sums_nmv+nmv
+                                srt=srt.replace(':','')
                                 sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
@@ -5996,6 +6000,7 @@ def testo(request):
                                 sums_ovv=sums_ovv+ovv
                                 sums_spn=sums_spn+spn
                                 sums_nmv=sums_nmv+nmv
+                                srt=srt.replace(':','')
                                 sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
@@ -6018,16 +6023,16 @@ def testo(request):
                         yr_data=panel_repo_yearly.objects.create(device_id=device_id,service='panel',ipv={'sum':sums_ipv,'avg':avgs_ipv,'count':count},unv={'sum':sums_unv,'avg':avgs_unv,'count':count},ovv={'sum':sums_ovv,'avg':avgs_ovv,'count':count},spn={'sum':sums_spn,'avg':avgs_spn,'count':count},nmv={'sum':sums_nmv,'avg':avgs_nmv,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},month=dd[1],year=dd[0],day=dd[2],hour=dd[3])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'panel':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'panel':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='panel',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                     
             try:
                 if 'ampv1'==components:
@@ -6086,7 +6091,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6133,7 +6139,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6180,7 +6187,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6227,7 +6235,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6245,16 +6254,16 @@ def testo(request):
                         yr_data=ampv1_repo_yearly.objects.create(device_id=device_id,service='ampv1',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'ampv1':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'ampv1':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -6318,7 +6327,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6365,7 +6375,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6412,7 +6423,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6459,7 +6471,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6477,16 +6490,16 @@ def testo(request):
                         yr_data=ampv2_repo_yearly.objects.create(device_id=device_id,service='ampv2',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'ampv2':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'ampv2':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -6547,7 +6560,8 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                srt=srt.replace(':','')
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6594,7 +6608,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6641,7 +6655,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6688,7 +6702,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6706,16 +6720,16 @@ def testo(request):
                         yr_data=ampv3_repo_yearly.objects.create(device_id=device_id,service='ampv3',rmt={'sum':sums_rmt,'avg':avgs_rmt,'count':count},cct={'sum':sums_cct,'avg':avgs_cct,'count':count},srt={'sum':sums_srt,'avg':avgs_srt,'count':count},bkt={'sum':sums_bkt,'avg':avgs_bkt,'count':count},rst={'sum':sums_rst,'avg':avgs_rst,'count':count},mot={'sum':sums_mot,'avg':avgs_mot,'count':count},hour=dd[3],month=dd[1],year=dd[0],day=dd[2])
                         yr_data.save()
             except Exception as e:
-                le=Errors.objects.all().last()
-                print("le is:",le,type(le))
-                if le.service == 'ampv3':
-                    print("Error is alrady prasent")
-                else:
+                # le=Errors.objects.all().last()
+                # print("le is:",le,type(le))
+                # if le.service == 'ampv3':
+                #     print("Error is alrady prasent")
+                # else:
                     erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                     erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -6776,7 +6790,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6823,7 +6837,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6870,7 +6884,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6917,7 +6931,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -6937,9 +6951,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -7001,7 +7015,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -7048,7 +7062,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -7095,7 +7109,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -7142,7 +7156,7 @@ def testo(request):
                                 mot=yr.mot
                                 sums_rmt=sums_rmt+rmt
                                 sums_cct=sums_cct+cct
-                                sums_srt=sums_srt+srt
+                                sums_srt=sums_srt+int(srt)
                                 sums_bkt=sums_bkt+bkt
                                 sums_rst=sums_rst+rst
                                 sums_mot=sums_mot+mot
@@ -7162,9 +7176,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='ampv5',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -7526,9 +7540,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='atm',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
             try:
                 if 'cnd_consen'==components:
                     # com=cl
@@ -7700,9 +7714,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='cnd_consen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')
@@ -7877,9 +7891,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tds_consen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')
@@ -8052,9 +8066,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='F_flowsen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event') 
@@ -8228,9 +8242,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='P_flowsen',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')    
@@ -8416,9 +8430,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
                 
                 
                 # EchoConsumer.websocket_receive('event','event')  
@@ -8599,9 +8613,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
             try:
 
                 if 'tap3'==components:
@@ -8781,9 +8795,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
 
             try:
 
@@ -8968,9 +8982,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='tap4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
 
             try:
 
@@ -9105,9 +9119,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen1',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
             try:
 
                 if 'flowsen2'==components:
@@ -9241,9 +9255,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen2',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
             try:
 
                 if 'flowsen3'==components:
@@ -9377,9 +9391,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen3',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
             try:
 
                 if 'flowsen4'==components:
@@ -9513,9 +9527,9 @@ def testo(request):
             except Exception as e:
                 erro=Errors.objects.create(device_id=device_id,message_type=msg_type,e_discriptions=e,o_message=dict_str,service='flowsen4',year=dd[0],month=dd[1],day=dd[2],hour=dd[3],minit=dd[4],second=dd[5])
                 erro.save()
-                error_message = e
-                # global eg
-                eg = e
+                # error_message = e
+                # # global eg
+                # eg = e
     mqtt_client.on_connect = on_connect
     mqtt_client.on_message = on_message
     # client.username_pw_set(settings.MQTT_USER, settings.MQTT_PASSWORD)

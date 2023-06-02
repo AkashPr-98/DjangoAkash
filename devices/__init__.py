@@ -1,1 +1,1 @@
-# default_app_config = 'devices.apps.DevicesConfig'
+default_app_config = 'devices.apps.DevicesConfig'
