@@ -168,8 +168,8 @@ urlpatterns = [
     # path('admin/', admin.site.urls),
     path('', include(router.urls)),
     # path('c',views.on_message)
-    # path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('token/', obtain_token, name='token_obtain_pair'),
+    path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    # path('token/', views.obtain_token, name='token_obtain_pair'),
     path('token/refresh/', MyTokenRefreshView.as_view(), name='token_refresh'),
     
 ]
