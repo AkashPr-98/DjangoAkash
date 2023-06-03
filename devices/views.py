@@ -60,7 +60,9 @@ from rest_framework.permissions import IsAuthenticated
 from django.core.serializers import serialize
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework.decorators import api_view
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 # Use settings and models as needed
 
 # import os
@@ -120,7 +122,23 @@ from rest_framework.response import Response
     #     )
     #     raise StopConsumer()
 
+@api_view(['POST'])
+def obtain_token(request):
+    username = request.data.get('username')
+    password = request.data.get('password')
 
+    if username and password:
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            refresh = RefreshToken.for_user(user)
+
+            return Response({
+                'access': str(refresh.access_token),
+                'refresh': str(refresh),
+            })
+
+    return Response({'error': 'Invalid credentials'}, status=400)
  
 def dateandtime():
     year=datetime.today().strftime('%Y')
