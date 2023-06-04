@@ -9560,6 +9560,6 @@ def testo(request):
 
     # Start the client loop
 
-    # mqtt_client.loop_forever()
+    mqtt_client.loop_forever()
     # EchoConsumer.websocket_receive('event','event')
 
