@@ -46,7 +46,7 @@ from devices.views import (
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('a',views.Treat_cnd),
-    path('aa',views.testo),
+    path('',views.testo),
     path('topicapi/',include('devices.urls')),
     path('topicapi/all_ampv1/', all_ampv1ListAPIView.as_view(), name='all-ampv1'),
     path('topicapi/all_ampv2/', all_ampv2ListAPIView.as_view(), name='all_ampv2'),
