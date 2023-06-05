@@ -3612,7 +3612,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgsta/{cmpname}',str(data_dict))
                 
 
             except Exception as e:
@@ -3732,7 +3732,7 @@ class hppstateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgsta/{cmpname}',str(data_dict))
                 
 
             except Exception as e:
@@ -4153,7 +4153,7 @@ class ampv1stateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgsta/{cmpname}',str(data_dict))
                 
 
             except Exception as e:
@@ -4238,7 +4238,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
-                mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
+                mqtt_client.publish(f'wc/{did}/chgsta/{cmpname}',str(data_dict))
                 
 
             except Exception as e:
