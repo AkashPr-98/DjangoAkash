@@ -3595,6 +3595,7 @@ class RwpstateViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = RwpstateSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3605,8 +3606,9 @@ class RwpstateViewset(viewsets.ModelViewSet):
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 for x in dinfo:
-                    
+                    global deviceid
                     did=x.Device_id
+                    deviceid=did
                     cmpname=x.componant_name
                     
                 for key in unwanted_keys:
@@ -3621,7 +3623,8 @@ class RwpstateViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=Rwp_state.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass    
         def desptroy(self, request):
@@ -3637,7 +3640,7 @@ class rwpsettingViewset(viewsets.ModelViewSet):
     print("hi ok ")
     # queryset = rwp_setting.objects.all().order_by('-id')[:1]
     queryset = rwp_setting.objects.all()
-    print("queryset is")
+    print("queryset is:::",queryset)
 
     # data=queryset.last()
     # print("OLc",data.olc)
@@ -3683,12 +3686,13 @@ class rwpsettingViewset(viewsets.ModelViewSet):
             # Get the device information based on the provided values
             dinfo = device_info.objects.filter(componant_name=data_dict['componant_name'],
                                                unit_type=data_dict['unit_type'],
-                                               company_name=data_dict['company_name']).last()
+                                              company_name=data_dict['company_name']).last()
+            deviceid=0
             if dinfo:
                 did = dinfo.Device_id
+                deviceid=did
                 cmpname = dinfo.componant_name
-                data_dict['device_id'] = did
-                
+                # data_dict['device_id'] = did
                 # Remove unwanted keys from the data_dict
                 # for key in unwanted_keys:
                 #     if key in data_dict:
@@ -3699,6 +3703,8 @@ class rwpsettingViewset(viewsets.ModelViewSet):
                 # print("Data sent to HiveMQ")
                 
             serializer.save()  # Save the data to the database
+            ddid=rwp_setting.objects.filter(device_id='').update(device_id=deviceid)
+            ddid.save()
             
         except Exception as e:
             print("Error:", e)
@@ -3715,6 +3721,7 @@ class hppstateViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = hppstateSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3724,11 +3731,12 @@ class hppstateViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3742,7 +3750,8 @@ class hppstateViewset(viewsets.ModelViewSet):
             try:
 
                 serializer.save()  # Save the data to the database
-                
+                ddid=hpp_state.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass     
         def desptroy(self, request):
@@ -3757,8 +3766,9 @@ class hppsettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = hppsettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
-        
+            
             try:
                 data_dict = json.loads(request.body)
                 unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
@@ -3766,11 +3776,12 @@ class hppsettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3783,6 +3794,8 @@ class hppsettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
+                ddid=hpp_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
                 
             except Exception as e:
                 pass        
@@ -3798,8 +3811,8 @@ class cndsettingViewset(viewsets.ModelViewSet):
         queryset = cnd_setting.objects.all()
         serializer_class = cndsettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid =0
         def dispatch(self, request, *args, **kwargs):
-        
             try:
                 data_dict = json.loads(request.body)
                 unwanted_keys = ["unit_type", "water_treatment","company_name","componant_name","device_id"]  # Example of unwanted keys
@@ -3807,20 +3820,23 @@ class cndsettingViewset(viewsets.ModelViewSet):
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
                 did = 0
                 cmpname = ''
+                global deviceid
                 for x in dinfo:
                     did=x.Device_id
+                    deviceid=did
                     cmpname=x.componant_name
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
                 mqtt_client.publish(f'wc/{did}/chgset/{cmpname}',str(data_dict))
-
             except Exception as e:
                 pass
             return super().dispatch(request)    
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
+                ddid=cnd_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -3837,7 +3853,7 @@ class tdssettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = tdssettingSerializer
         permission_classes = [permissions.IsAuthenticated]
-        
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3847,11 +3863,12 @@ class tdssettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 print("valuelist is:",value_list)
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3865,7 +3882,8 @@ class tdssettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tds_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -3882,6 +3900,7 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = FflowsensettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3891,11 +3910,12 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3908,7 +3928,8 @@ class FflowsensettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=F_flowsen_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -3925,6 +3946,7 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class =PflowsensettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3934,11 +3956,12 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3951,7 +3974,8 @@ class PflowsensettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=P_flowsen_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -3967,6 +3991,7 @@ class panelsettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = panelsettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -3976,11 +4001,12 @@ class panelsettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -3993,7 +4019,8 @@ class panelsettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=panel_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4009,6 +4036,7 @@ class atmsettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = atmsettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4018,11 +4046,12 @@ class atmsettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4035,7 +4064,8 @@ class atmsettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=atm_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4052,6 +4082,7 @@ class cnd_consensettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = cnd_consensettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4061,11 +4092,12 @@ class cnd_consensettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4078,7 +4110,8 @@ class cnd_consensettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=cnd_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4094,6 +4127,7 @@ class tds_consensettingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = tds_consensettingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4103,11 +4137,12 @@ class tds_consensettingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4120,7 +4155,8 @@ class tds_consensettingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tds_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4136,6 +4172,7 @@ class ampv1stateViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = ampv1stateSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4145,11 +4182,12 @@ class ampv1stateViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4162,7 +4200,8 @@ class ampv1stateViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=ampv1_state.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4179,6 +4218,7 @@ class ampv1settingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = ampv1settingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4188,11 +4228,12 @@ class ampv1settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4205,7 +4246,8 @@ class ampv1settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=ampv1_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4221,6 +4263,7 @@ class ampv2stateViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = ampv2stateSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4230,11 +4273,12 @@ class ampv2stateViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4247,7 +4291,8 @@ class ampv2stateViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=ampv2_state.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4263,6 +4308,7 @@ class ampv2settingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = ampv2settingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4272,11 +4318,12 @@ class ampv2settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4289,7 +4336,8 @@ class ampv2settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=ampv2_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4306,6 +4354,7 @@ class tap1settingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = tap1settingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4315,11 +4364,12 @@ class tap1settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4332,7 +4382,8 @@ class tap1settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tap1_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4348,6 +4399,7 @@ class tap2settingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = tap2settingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4357,11 +4409,12 @@ class tap2settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4374,7 +4427,8 @@ class tap2settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tap2_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4390,6 +4444,7 @@ class tap3settingViewset(viewsets.ModelViewSet):
         # specify serializer to be used
         serializer_class = tap3settingSerializer
         permission_classes = [permissions.IsAuthenticated]
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4399,11 +4454,12 @@ class tap3settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4416,7 +4472,8 @@ class tap3settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tap3_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
@@ -4433,6 +4490,7 @@ class tap4settingViewset(viewsets.ModelViewSet):
         serializer_class = tap4settingSerializer
         permission_classes = [permissions.IsAuthenticated]
     
+        deviceid=0
         def dispatch(self, request, *args, **kwargs):
         
             try:
@@ -4442,11 +4500,12 @@ class tap4settingViewset(viewsets.ModelViewSet):
                 value_list=list(data_dict.values())
                 
                 dinfo=device_info.objects.filter(componant_name=value_list[2],unit_type=value_list[1],company_name=value_list[0])
+                global deviceid
                 for x in dinfo:
                     
                     did=x.Device_id
                     cmpname=x.componant_name
-                    
+                    deviceid=did
                 for key in unwanted_keys:
                     if key in data_dict:
                         del data_dict[key]
@@ -4459,7 +4518,8 @@ class tap4settingViewset(viewsets.ModelViewSet):
         def perform_create(self, serializer):
             try:
                 serializer.save()  # Save the data to the database
-                
+                ddid=tap4_setting.objects.filter(device_id='').update(device_id=deviceid)
+                ddid.save()
             except Exception as e:
                 pass        
         def desptroy(self, request):
